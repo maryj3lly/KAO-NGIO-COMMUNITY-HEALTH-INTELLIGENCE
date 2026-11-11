@@ -14,6 +14,27 @@ const ADMIN_USERNAME = "admin";
 const SESSION_TTL_SECONDS = 21600; // 6 ชั่วโมง
 const MODULES = ["map","genogram","organization","resources","calendar","history","people","survey"];
 const HEADERS = ["id","module","title","village","payload","createdAt","updatedAt","createdBy"];
+const DISPLAY_HEADERS = ["รหัสรายการ","โมดูล","ชื่อรายการ","หมู่บ้าน","ข้อมูลดิบ (JSON)","สร้างเมื่อ","แก้ไขเมื่อ","ผู้บันทึก"];
+const MODULE_FIELDS = {
+  map:["address","members","lat","lng","diseases","diseaseOther","detail"],
+  genogram:["householdId","name","sex","age","generation","spouseId","spouseStatus","fatherId","motherId","focusPerson","healthStatus","diseases","detail"],
+  organization:["type","role","parentId","detail"],
+  resources:["type","location","detail"],
+  calendar:["month","type","detail"],
+  history:["year","detail"],
+  people:["role","birth","detail","timeline"],
+  survey:["houseCode","familyName","headId"]
+};
+const SURVEY_MEMBER_FIELDS = ["nationalId","name","birthDate","sex","age","maritalStatus","occupation","homeStatus","education","familyPlanning","healthcare","healthConditions","moveType","moveDate"];
+const FIELD_LABELS = {
+  address:"ที่อยู่โดยย่อ",members:"จำนวนสมาชิก",lat:"ละติจูด",lng:"ลองจิจูด",diseases:"โรค/ภาวะสุขภาพ",diseaseOther:"โรค/ภาวะอื่น",
+  householdId:"ครัวเรือน",name:"ชื่อ/รหัสเรียก",sex:"เพศ",age:"อายุ",generation:"รุ่น",spouseId:"คู่สมรส",spouseStatus:"สถานะคู่สมรส",
+  fatherId:"บิดา",motherId:"มารดา",focusPerson:"บุคคลหลัก",healthStatus:"สถานะสุขภาพ",type:"ประเภท",role:"บทบาท",parentId:"ผู้ปกครอง/องค์กรแม่",
+  location:"สถานที่",month:"เดือน/ช่วงเวลา",year:"ปี/ช่วงเวลา",birth:"ปีเกิด",detail:"รายละเอียด/หมายเหตุ",timeline:"ไทม์ไลน์",
+  houseCode:"รหัสบ้าน",familyName:"ครอบครัวที่",headId:"เลขประจำตัวหัวหน้าครอบครัว",nationalId:"เลขประจำตัวประชาชน",birthDate:"วันเดือนปีเกิด",
+  maritalStatus:"สถานภาพสมรส",occupation:"อาชีพ",homeStatus:"สถานะในบ้าน",education:"การศึกษา",familyPlanning:"การวางแผนครอบครัว",
+  healthcare:"สิทธิด้านการรักษาพยาบาล",healthConditions:"โรคประจำตัว/ความพิการ",moveType:"ย้ายเข้า/ย้ายออก",moveDate:"วันเดือนปีที่ย้าย"
+};
 
 function doGet() {
   return ContentService.createTextOutput(JSON.stringify({
@@ -61,6 +82,7 @@ function setupSystem() {
     if (sh.getLastRow() === 0) sh.getRange(1,1,1,HEADERS.length).setValues([HEADERS]);
     sh.setFrozenRows(1);
     sh.getRange(1,1,1,HEADERS.length).setFontWeight("bold").setBackground("#dff3e7");
+    syncReadableSheet_(module);
   });
   if (!props.getProperty("ADMIN_USER")) {
     props.setProperty("ADMIN_USER", ADMIN_USERNAME);
@@ -71,6 +93,11 @@ function setupSystem() {
     Logger.log("Initial admin password (save it securely): " + initialPassword);
   }
   Logger.log("Setup completed.");
+}
+
+function setupReadableSheets() {
+  MODULES.forEach(function(module){syncReadableSheet_(module);});
+  Logger.log("Readable columns updated for all module sheets.");
 }
 
 function changeAdminPassword(newPassword) {
@@ -134,6 +161,7 @@ function createRecord_(module, record) {
     const title = String(record.title || record.name || record.householdId || "รายการใหม่").slice(0,250);
     const village = String(record.village || "");
     sh.appendRow([id,module,title,village,JSON.stringify(record),now,now,ADMIN_USERNAME]);
+    syncReadableSheet_(module);
     return {id:id, record:record};
   } finally { lock.releaseLock(); }
 }
@@ -154,6 +182,7 @@ function updateRecord_(module, id, record) {
         new Date().toISOString(),
         ADMIN_USERNAME
       ]]);
+      syncReadableSheet_(module);
       return {record:merged};
     }
   }
@@ -203,6 +232,81 @@ function getSheet_(module) {
     sh.setFrozenRows(1);
   }
   return sh;
+}
+function syncReadableSheet_(module) {
+  const sh = getSheet_(module);
+  const lastRow = sh.getLastRow();
+  const rows = lastRow > 1 ? sh.getRange(2,1,lastRow-1,HEADERS.length).getValues() : [];
+  const records = rows.map(function(row){
+    const record = safeParse_(row[4]);
+    return record && typeof record === "object" && !Array.isArray(record) ? record : {};
+  });
+  const columns = readableColumns_(module, records);
+  const columnCount = HEADERS.length + columns.length;
+  if (sh.getMaxColumns() < columnCount) sh.insertColumnsAfter(sh.getMaxColumns(), columnCount - sh.getMaxColumns());
+  sh.getRange(1,1,1,HEADERS.length).setValues([DISPLAY_HEADERS]);
+  if (columns.length) {
+    sh.getRange(1,HEADERS.length+1,1,columns.length).setValues([columns.map(function(column){return column.label;})]);
+    if (records.length) {
+      sh.getRange(2,HEADERS.length+1,records.length,columns.length).setValues(records.map(function(record){
+        return columns.map(function(column){return readableValue_(record,column.key);});
+      }));
+    }
+  }
+  sh.setFrozenRows(1);
+  sh.setFrozenColumns(4);
+  sh.setRowHeight(1,40);
+  sh.getRange(1,1,1,columnCount).setFontWeight("bold").setBackground("#dff3e7").setWrap(true);
+  sh.setColumnWidth(1,150);
+  sh.setColumnWidth(2,90);
+  sh.setColumnWidth(3,180);
+  sh.setColumnWidth(4,100);
+  sh.hideColumns(5);
+  sh.setColumnWidth(6,160);
+  sh.setColumnWidth(7,160);
+  sh.setColumnWidth(8,120);
+  columns.forEach(function(column,index){
+    sh.setColumnWidth(HEADERS.length+index+1,/detail|diseases|timeline/i.test(column.key)?280:150);
+  });
+  const filter = sh.getFilter();
+  if (filter) filter.remove();
+  sh.getRange(1,1,Math.max(lastRow,1),columnCount).createFilter();
+}
+function readableColumns_(module, records) {
+  const fieldKeys = (MODULE_FIELDS[module] || []).slice();
+  const memberKeys = SURVEY_MEMBER_FIELDS.slice();
+  records.forEach(function(record){
+    Object.keys(record).forEach(function(key){
+      if (["id","module","title","village","createdAt","updatedAt","createdBy"].indexOf(key) !== -1) return;
+      if (module === "survey" && key === "members") return;
+      if (fieldKeys.indexOf(key) === -1) fieldKeys.push(key);
+    });
+    if (module === "survey") {
+      (Array.isArray(record.members) ? record.members : []).forEach(function(member){
+        Object.keys(member).forEach(function(key){if(memberKeys.indexOf(key)===-1)memberKeys.push(key);});
+      });
+    }
+  });
+  const columns = fieldKeys.map(function(key){return {key:key,label:FIELD_LABELS[key]||key};});
+  if (module === "survey") {
+    const maxMembers = Math.max(1,records.reduce(function(max,record){return Math.max(max,Array.isArray(record.members)?record.members.length:0);},0));
+    columns.push({key:"members.length",label:"จำนวนสมาชิก"});
+    for (let i=0;i<maxMembers;i++) {
+      memberKeys.forEach(function(key){
+        columns.push({key:"members["+i+"]."+key,label:"สมาชิก "+(i+1)+" · "+(FIELD_LABELS[key]||key)});
+      });
+    }
+  }
+  return columns;
+}
+function readableValue_(record, key) {
+  if (key === "members.length") return Array.isArray(record.members) ? record.members.length : 0;
+  const memberMatch = key.match(/^members\[(\d+)\]\.(.+)$/);
+  let value = memberMatch ? ((Array.isArray(record.members) ? record.members[Number(memberMatch[1])] : null) || {})[memberMatch[2]] : record[key];
+  if (value === undefined || value === null) return "";
+  if (Array.isArray(value)) return value.join(", ");
+  if (typeof value === "object") return JSON.stringify(value);
+  return value;
 }
 function validateModule_(module) {
   if (MODULES.indexOf(String(module)) === -1) throw new Error("ชื่อเครื่องมือไม่ถูกต้อง");
