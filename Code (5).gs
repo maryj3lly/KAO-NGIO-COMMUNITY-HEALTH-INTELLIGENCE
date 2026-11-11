@@ -12,7 +12,7 @@
 const SHEET_ID = "17Oxw03fn-A8JcGbwaLTp7zDmpAns37eIpFJ-8xbLQlQ";
 const ADMIN_USERNAME = "admin";
 const SESSION_TTL_SECONDS = 21600; // 6 ชั่วโมง
-const MODULES = ["map","genogram","organization","resources","calendar","history","people"];
+const MODULES = ["map","genogram","organization","resources","calendar","history","people","survey"];
 const HEADERS = ["id","module","title","village","payload","createdAt","updatedAt","createdBy"];
 
 function doGet() {
