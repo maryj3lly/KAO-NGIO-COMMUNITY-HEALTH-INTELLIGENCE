@@ -12,7 +12,7 @@
 const SHEET_ID = "17Oxw03fn-A8JcGbwaLTp7zDmpAns37eIpFJ-8xbLQlQ";
 const ADMIN_USERNAME = "admin";
 const SESSION_TTL_SECONDS = 21600; // 6 ชั่วโมง
-const MODULES = ["map","genogram","organization","resources","calendar","history","people","survey"];
+const MODULES = ["map","genogram","organization","resources","calendar","history","people","survey","healthSurvey"];
 const HEADERS = ["id","module","title","village","payload","createdAt","updatedAt","createdBy"];
 const DISPLAY_HEADERS = ["รหัสรายการ","โมดูล","ชื่อรายการ","หมู่บ้าน","ข้อมูลดิบ (JSON)","สร้างเมื่อ","แก้ไขเมื่อ","ผู้บันทึก"];
 const MODULE_FIELDS = {
@@ -23,9 +23,24 @@ const MODULE_FIELDS = {
   calendar:["month","type","detail"],
   history:["year","detail"],
   people:["role","birth","detail","timeline"],
-  survey:["houseCode","familyName","headId"]
+  survey:["houseCode","familyName","headId"],
+  healthSurvey:[
+    "householdCode","surveyorCode","householdType","householdTypeOther","memberCount","maleCount","femaleCount","otherGenderCount",
+    "dwellingType","dwellingTypeOther","housingTenure","housingTenureOther","monthlyIncome","incomeSources","incomeSourceOther","hasDebt","debtAmount",
+    "drinkingWaterSource","drinkingWaterOther","householdWaterSource","householdWaterOther","waterQuality","waterContainers","waterTankCount","waterJarCount","waterBasinCount","waterOtherContainer","waterOtherContainerCount",
+    "insideCleanliness","outsideCleanliness","toiletCondition","wasteDisposal","wasteDisposalOther","wasteSorting","foodStorage","handwashingFacilities",
+    "foodFrequencyVegetables","foodFrequencyFruit","foodFrequencySweetDrinks","foodFrequencySaltyFood","foodFrequencyProcessedFood",
+    "pregnancyInHousehold","pregnancyCount","prenatalCare","childrenUnderFive","childCountUnderFive","childVaccination","childGrowth","breastfeedingSixMonths","childDevelopment",
+    "firstProvider","serviceDistance","transport","hasAccessProblem","accessProblems","desiredServices","mainHealthConcern","healthServiceSuggestions"
+  ]
 };
 const SURVEY_MEMBER_FIELDS = ["nationalId","name","birthDate","sex","age","maritalStatus","occupation","homeStatus","education","familyPlanning","healthcare","healthConditions","moveType","moveDate"];
+const HEALTH_SURVEY_MEMBER_FIELDS = [
+  "memberCode","sex","age","relationship","maritalStatus","education","occupation","healthcare","healthConditions","healthConditionOther",
+  "receivingTreatment","medicationUse","recentIllness","hospitalizedRecently","disability","stressLevel","weightKg","heightCm","waistCm",
+  "diabetesScreening","bloodGlucose","bloodPressureScreening","bloodPressure","cancerScreening","smokingStatus","cigarettesPerDay",
+  "alcoholUse","exerciseFrequency","dailyFruitVeg","annualCheckup","memberHealthNotes"
+];
 const FIELD_LABELS = {
   address:"ที่อยู่โดยย่อ",members:"จำนวนสมาชิก",lat:"ละติจูด",lng:"ลองจิจูด",diseases:"โรค/ภาวะสุขภาพ",diseaseOther:"โรค/ภาวะอื่น",
   householdId:"ครัวเรือน",name:"ชื่อ/รหัสเรียก",sex:"เพศ",age:"อายุ",generation:"รุ่น",spouseId:"คู่สมรส",spouseStatus:"สถานะคู่สมรส",
@@ -33,7 +48,30 @@ const FIELD_LABELS = {
   location:"สถานที่",month:"เดือน/ช่วงเวลา",year:"ปี/ช่วงเวลา",birth:"ปีเกิด",detail:"รายละเอียด/หมายเหตุ",timeline:"ไทม์ไลน์",
   houseCode:"รหัสบ้าน",familyName:"ครอบครัวที่",headId:"เลขประจำตัวหัวหน้าครอบครัว",nationalId:"เลขประจำตัวประชาชน",birthDate:"วันเดือนปีเกิด",
   maritalStatus:"สถานภาพสมรส",occupation:"อาชีพ",homeStatus:"สถานะในบ้าน",education:"การศึกษา",familyPlanning:"การวางแผนครอบครัว",
-  healthcare:"สิทธิด้านการรักษาพยาบาล",healthConditions:"โรคประจำตัว/ความพิการ",moveType:"ย้ายเข้า/ย้ายออก",moveDate:"วันเดือนปีที่ย้าย"
+  healthcare:"สิทธิด้านการรักษาพยาบาล",healthConditions:"โรคประจำตัว/ความพิการ",moveType:"ย้ายเข้า/ย้ายออก",moveDate:"วันเดือนปีที่ย้าย",
+  householdCode:"รหัสครัวเรือน",surveyorCode:"รหัสผู้สำรวจ",householdType:"ลักษณะครัวเรือน",householdTypeOther:"ลักษณะครัวเรือนอื่น",
+  memberCount:"จำนวนสมาชิกทั้งหมด",maleCount:"สมาชิกเพศชาย",femaleCount:"สมาชิกเพศหญิง",otherGenderCount:"สมาชิกเพศอื่น/ไม่ระบุ",
+  dwellingType:"ประเภทที่อยู่อาศัย",dwellingTypeOther:"ประเภทที่อยู่อาศัยอื่น",housingTenure:"การถือครองที่อยู่อาศัย",housingTenureOther:"การถือครองอื่น",
+  monthlyIncome:"รายได้ครัวเรือนต่อเดือน",incomeSources:"แหล่งรายได้",incomeSourceOther:"แหล่งรายได้อื่น",hasDebt:"มีหนี้สิน",debtAmount:"จำนวนหนี้สินโดยประมาณ",
+  drinkingWaterSource:"แหล่งน้ำดื่ม",drinkingWaterOther:"แหล่งน้ำดื่มอื่น",householdWaterSource:"แหล่งน้ำใช้",householdWaterOther:"แหล่งน้ำใช้อื่น",
+  waterQuality:"คุณภาพน้ำ",waterContainers:"วิธีเก็บสำรองน้ำ",waterTankCount:"จำนวนถังเก็บน้ำ",waterJarCount:"จำนวนโอ่ง/ตุ่ม",waterBasinCount:"จำนวนภาชนะ/กะละมัง",waterOtherContainer:"ภาชนะเก็บน้ำอื่น",waterOtherContainerCount:"จำนวนภาชนะอื่น",
+  insideCleanliness:"ความสะอาดภายในบ้าน",outsideCleanliness:"ความสะอาดบริเวณบ้าน",toiletCondition:"สภาพส้วม/ห้องน้ำ",wasteDisposal:"วิธีกำจัดขยะ",
+  wasteDisposalOther:"วิธีกำจัดขยะอื่น",wasteSorting:"การคัดแยกขยะ",foodStorage:"การเก็บรักษาอาหาร",handwashingFacilities:"จุดล้างมือพร้อมสบู่",
+  foodFrequencyVegetables:"ความถี่บริโภคผัก",foodFrequencyFruit:"ความถี่บริโภคผลไม้",foodFrequencySweetDrinks:"ความถี่บริโภคเครื่องดื่มหวาน",
+  foodFrequencySaltyFood:"ความถี่บริโภคอาหารเค็ม",foodFrequencyProcessedFood:"ความถี่บริโภคอาหารแปรรูป/หมักดอง",
+  pregnancyInHousehold:"มีสมาชิกตั้งครรภ์",pregnancyCount:"จำนวนผู้ตั้งครรภ์",prenatalCare:"การฝากครรภ์/รับบริการตามนัด",
+  childrenUnderFive:"มีเด็กอายุต่ำกว่า 5 ปี",childCountUnderFive:"จำนวนเด็กอายุต่ำกว่า 5 ปี",childVaccination:"การได้รับวัคซีนตามเกณฑ์",
+  childGrowth:"การติดตามการเจริญเติบโต",breastfeedingSixMonths:"การได้รับนมแม่อย่างเดียว 6 เดือน",childDevelopment:"การคัดกรองพัฒนาการเด็ก",
+  firstProvider:"สถานบริการสุขภาพที่ใช้ก่อน",serviceDistance:"ระยะทางถึงสถานบริการ",transport:"การเดินทางไปสถานบริการ",
+  hasAccessProblem:"มีปัญหาในการเข้าถึงบริการ",accessProblems:"ปัญหาการเข้าถึงบริการ",desiredServices:"บริการสุขภาพที่ต้องการ",
+  mainHealthConcern:"ปัญหาสุขภาพสำคัญ",healthServiceSuggestions:"ข้อเสนอแนะต่อบริการสุขภาพ",memberCode:"รหัสสมาชิก",
+  relationship:"ความสัมพันธ์กับหัวหน้าครัวเรือน",healthConditionOther:"โรค/ภาวะอื่น",receivingTreatment:"การรักษาโรคประจำตัว",
+  medicationUse:"การใช้ยา/การรักษาต่อเนื่อง",recentIllness:"การเจ็บป่วยในช่วงที่ผ่านมา",hospitalizedRecently:"การรักษาในโรงพยาบาล",
+  disability:"ความพิการ/ข้อจำกัด",stressLevel:"ระดับความเครียด",weightKg:"น้ำหนัก (กิโลกรัม)",heightCm:"ส่วนสูง (เซนติเมตร)",
+  waistCm:"รอบเอว (เซนติเมตร)",diabetesScreening:"ผลคัดกรองเบาหวาน",bloodGlucose:"ระดับน้ำตาลในเลือด",
+  bloodPressureScreening:"ผลคัดกรองความดันโลหิต",bloodPressure:"ค่าความดันโลหิต",cancerScreening:"ประวัติ/ผลคัดกรองมะเร็ง",
+  smokingStatus:"การสูบบุหรี่",cigarettesPerDay:"จำนวนบุหรี่ต่อวัน",alcoholUse:"การดื่มเครื่องดื่มแอลกอฮอล์",
+  exerciseFrequency:"ความถี่การออกกำลังกาย",dailyFruitVeg:"รับประทานผัก/ผลไม้ทุกวัน",annualCheckup:"ตรวจสุขภาพประจำปี",memberHealthNotes:"หมายเหตุสุขภาพสมาชิก"
 };
 
 function doGet() {
@@ -156,6 +194,7 @@ function createRecord_(module, record) {
   lock.waitLock(10000);
   try {
     const sh = getSheet_(module);
+    if (module === "map") assertUniqueHouseholdCode_(sh, record.title, "");
     const now = new Date().toISOString();
     const id = Utilities.getUuid();
     const title = String(record.title || record.name || record.householdId || "รายการใหม่").slice(0,250);
@@ -169,24 +208,43 @@ function createRecord_(module, record) {
 function updateRecord_(module, id, record) {
   validateModule_(module);
   if (!id) throw new Error("ไม่พบรหัสรายการ");
-  const sh = getSheet_(module), values = sh.getDataRange().getValues();
-  for (let i=1;i<values.length;i++) {
-    if (String(values[i][0]) === String(id)) {
-      const old = safeParse_(values[i][4]);
-      const merged = Object.assign({}, old, record);
-      sh.getRange(i+1,3,1,6).setValues([[
-        String(merged.title || merged.name || "รายการ").slice(0,250),
-        String(merged.village || ""),
-        JSON.stringify(merged),
-        values[i][5],
-        new Date().toISOString(),
-        ADMIN_USERNAME
-      ]]);
-      syncReadableSheet_(module);
-      return {record:merged};
+  const lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try {
+    const sh = getSheet_(module), values = sh.getDataRange().getValues();
+    for (let i=1;i<values.length;i++) {
+      if (String(values[i][0]) === String(id)) {
+        const old = safeParse_(values[i][4]);
+        const merged = Object.assign({}, old, record);
+        if (module === "map") assertUniqueHouseholdCode_(sh, merged.title, id);
+        sh.getRange(i+1,3,1,6).setValues([[
+          String(merged.title || merged.name || "รายการ").slice(0,250),
+          String(merged.village || ""),
+          JSON.stringify(merged),
+          values[i][5],
+          new Date().toISOString(),
+          ADMIN_USERNAME
+        ]]);
+        syncReadableSheet_(module);
+        return {record:merged};
+      }
+    }
+    throw new Error("ไม่พบรายการที่ต้องการแก้ไข");
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function assertUniqueHouseholdCode_(sheet, code, excludeId) {
+  const normalizedCode = String(code || "").trim().slice(0,250).toLowerCase();
+  if (!normalizedCode) throw new Error("กรุณาระบุรหัสครัวเรือน");
+  const rows = sheet.getDataRange().getValues();
+  for (let i=1;i<rows.length;i++) {
+    if (excludeId && String(rows[i][0]) === String(excludeId)) continue;
+    if (String(rows[i][2] || "").trim().toLowerCase() === normalizedCode) {
+      throw new Error("รหัสครัวเรือนนี้มีอยู่แล้ว กรุณาตรวจสอบรายการเดิมก่อนบันทึก");
     }
   }
-  throw new Error("ไม่พบรายการที่ต้องการแก้ไข");
 }
 
 function deleteRecord_(module, id) {
@@ -274,23 +332,24 @@ function syncReadableSheet_(module) {
 }
 function readableColumns_(module, records) {
   const fieldKeys = (MODULE_FIELDS[module] || []).slice();
-  const memberKeys = SURVEY_MEMBER_FIELDS.slice();
+  const memberCollection = module === "survey" || module === "healthSurvey";
+  const memberKeys = module === "survey" ? SURVEY_MEMBER_FIELDS.slice() : module === "healthSurvey" ? HEALTH_SURVEY_MEMBER_FIELDS.slice() : [];
   records.forEach(function(record){
     Object.keys(record).forEach(function(key){
       if (["id","module","title","village","createdAt","updatedAt","createdBy"].indexOf(key) !== -1) return;
-      if (module === "survey" && key === "members") return;
+      if (memberCollection && key === "members") return;
       if (fieldKeys.indexOf(key) === -1) fieldKeys.push(key);
     });
-    if (module === "survey") {
+    if (memberCollection) {
       (Array.isArray(record.members) ? record.members : []).forEach(function(member){
         Object.keys(member).forEach(function(key){if(memberKeys.indexOf(key)===-1)memberKeys.push(key);});
       });
     }
   });
   const columns = fieldKeys.map(function(key){return {key:key,label:FIELD_LABELS[key]||key};});
-  if (module === "survey") {
+  if (memberCollection) {
     const maxMembers = Math.max(1,records.reduce(function(max,record){return Math.max(max,Array.isArray(record.members)?record.members.length:0);},0));
-    columns.push({key:"members.length",label:"จำนวนสมาชิก"});
+    columns.push({key:"members.length",label:module === "survey" ? "จำนวนสมาชิก" : "จำนวนสมาชิกที่มีข้อมูล"});
     for (let i=0;i<maxMembers;i++) {
       memberKeys.forEach(function(key){
         columns.push({key:"members["+i+"]."+key,label:"สมาชิก "+(i+1)+" · "+(FIELD_LABELS[key]||key)});
