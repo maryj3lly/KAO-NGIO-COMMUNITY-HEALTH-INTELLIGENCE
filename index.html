@@ -76,22 +76,1515 @@ body,body *{font-family:'TH Sarabun New','Sarabun',sans-serif!important}
 .calendar-overview{min-width:420px}.calendar-overview th:first-child{width:190px}.calendar-event{display:flex;flex-wrap:wrap;align-items:center;gap:7px;padding:5px 0}.calendar-event+.calendar-event{border-top:1px solid var(--line);margin-top:5px;padding-top:9px}.calendar-event b{font-size:12px}.calendar-event small{flex-basis:100%;color:var(--muted);font-size:11px;white-space:pre-wrap}
 @media(max-width:760px){.maplayout{grid-template-columns:1fr}.listbox{max-height:300px}.gen-node{width:148px}.genogram-canvas{min-height:180px}}
 </style>
+<style>
+:root {
+  --bg: #f3f6fb;
+  --card: #fff;
+  --ink: #1b2b42;
+  --muted: #74839a;
+  --green: #137d69;
+  --green2: #25ae88;
+  --mint: #e8f7f1;
+  --line: #e5ebf3;
+  --shadow: 0 10px 28px rgba(32, 57, 91, .07);
+}
+body {
+  background:
+    radial-gradient(ellipse at 92% 5%, rgba(119, 160, 247, .09), transparent 28rem),
+    var(--bg);
+}
+.sidebar {
+  background: linear-gradient(165deg, #172c45 0%, #1c4354 68%, #146054 100%);
+  box-shadow: 8px 0 28px rgba(25, 45, 70, .12);
+}
+.brandmark {
+  background: linear-gradient(145deg, #a4f2d0, #52d4c0);
+  color: #134a4c;
+}
+.nav button {
+  transition: background .2s ease, color .2s ease, transform .2s ease;
+}
+.nav button:hover {
+  transform: translateX(2px);
+}
+.nav button.active {
+  background: linear-gradient(100deg, rgba(91, 220, 177, .23), rgba(91, 220, 177, .08));
+  box-shadow: inset 3px 0 #72e3bd;
+}
+.topbar {
+  border-bottom-color: rgba(224, 232, 242, .9);
+  box-shadow: 0 4px 18px rgba(32, 57, 91, .035);
+}
+.status {
+  background: #e9f7f2;
+  color: #137d69;
+}
+.content {
+  padding-top: 28px;
+}
+.hero {
+  min-height: 214px;
+  padding: 32px 36px;
+  border-radius: 22px;
+  background: linear-gradient(112deg, #176d70 0%, #168e83 52%, #46bd96 100%);
+  box-shadow: 0 16px 38px rgba(22, 126, 112, .2);
+}
+.hero:before {
+  content: "";
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  right: 12%;
+  bottom: -190px;
+  border: 1px solid rgba(255, 255, 255, .18);
+  border-radius: 50%;
+  box-shadow: 0 0 0 28px rgba(255, 255, 255, .055), 0 0 0 58px rgba(255, 255, 255, .04);
+}
+.hero h1 {
+  position: relative;
+  z-index: 1;
+  font-size: clamp(24px, 2.4vw, 32px);
+  line-height: 1.35;
+}
+.hero p {
+  position: relative;
+  z-index: 1;
+  font-size: 13px;
+  line-height: 1.8;
+}
+.stats {
+  gap: 14px;
+  margin: 18px 0 24px;
+}
+.stat {
+  position: relative;
+  overflow: hidden;
+  min-height: 92px;
+  border-radius: 16px;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.stat:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(32, 57, 91, .1);
+}
+.stat:after {
+  content: "";
+  position: absolute;
+  width: 76px;
+  height: 76px;
+  right: -25px;
+  top: -30px;
+  border-radius: 50%;
+  background: var(--stat-tint, #edf5ff);
+}
+.stat:nth-child(1) { --stat-color: #428ce5; --stat-tint: #edf5ff; }
+.stat:nth-child(2) { --stat-color: #20a98a; --stat-tint: #e8f8f2; }
+.stat:nth-child(3) { --stat-color: #e77b63; --stat-tint: #fff1ed; }
+.stat:nth-child(4) { --stat-color: #8768d7; --stat-tint: #f2efff; }
+.staticon {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  background: var(--stat-tint);
+  color: var(--stat-color);
+}
+.stat small {
+  font-size: 11px;
+}
+.stat strong {
+  position: relative;
+  z-index: 1;
+  color: var(--stat-color);
+  font-size: 25px;
+}
+.sectionhead {
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+.sectionhead h2 {
+  font-size: 19px;
+}
+.sectionhead p {
+  font-size: 12px;
+  line-height: 1.7;
+}
+.toolgrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 15px;
+}
+.toolcard {
+  --tool-color: #428ce5;
+  --tool-tint: #edf5ff;
+  position: relative;
+  display: flex;
+  min-height: 168px;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 18px 19px;
+  border-radius: 17px;
+  box-shadow: 0 7px 20px rgba(32, 57, 91, .055);
+}
+.toolcard:after {
+  content: "";
+  position: absolute;
+  width: 94px;
+  height: 94px;
+  right: -38px;
+  bottom: -47px;
+  border-radius: 50%;
+  background: var(--tool-tint);
+  opacity: .8;
+  pointer-events: none;
+}
+.toolcard:nth-child(3n + 2) { --tool-color: #1fa889; --tool-tint: #e8f8f2; }
+.toolcard:nth-child(3n) { --tool-color: #8969d8; --tool-tint: #f2efff; }
+.toolcard:nth-child(3n + 4) { --tool-color: #e77b63; --tool-tint: #fff1ed; }
+.toolcard:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--tool-color) 38%, white);
+  box-shadow: 0 16px 30px rgba(32, 57, 91, .11);
+}
+.toolicon {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  background: var(--tool-tint);
+  color: var(--tool-color);
+}
+.toolcard .tag {
+  background: var(--tool-tint);
+  color: var(--tool-color);
+}
+.toolcard h3 {
+  position: relative;
+  z-index: 1;
+  margin-top: 13px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.toolcard p {
+  position: relative;
+  z-index: 1;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.progress {
+  position: relative;
+  z-index: 1;
+  height: 5px;
+  margin-top: auto;
+  padding-top: 12px;
+  box-sizing: content-box;
+  background: transparent;
+}
+.progress:before {
+  content: "";
+  position: absolute;
+  inset: 12px 0 0;
+  height: 5px;
+  border-radius: 8px;
+  background: #edf1f7;
+}
+.progress i {
+  position: relative;
+  z-index: 1;
+  height: 5px;
+  background: var(--tool-color);
+}
+.grid2 {
+  gap: 16px;
+  margin-top: 20px;
+}
+.panel {
+  border-radius: 17px;
+  box-shadow: 0 7px 20px rgba(32, 57, 91, .055);
+}
+.panelhead h3 {
+  font-size: 15px;
+}
+.btn {
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+.btn:hover {
+  box-shadow: 0 6px 15px rgba(20, 84, 69, .14);
+}
+.btn:focus-visible,
+.nav button:focus-visible,
+.toolcard:focus-visible {
+  outline: 3px solid rgba(66, 140, 229, .55);
+  outline-offset: 3px;
+}
+@media (max-width: 1100px) {
+  .toolgrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 760px) {
+  .sidebar {
+    box-shadow: 12px 0 32px rgba(14, 34, 50, .2);
+  }
+  .hero {
+    min-height: 0;
+    padding: 25px 22px;
+  }
+  .hero h1 {
+    font-size: 23px;
+  }
+  .stat {
+    min-height: 82px;
+    padding: 13px;
+  }
+  .sectionhead h2 {
+    font-size: 17px;
+  }
+  .toolcard {
+    min-height: 160px;
+  }
+}
+@media (max-width: 520px) {
+  .toolgrid {
+    grid-template-columns: 1fr;
+  }
+  .stats {
+    gap: 9px;
+  }
+  .stat {
+    gap: 9px;
+    padding: 11px 9px;
+  }
+  .staticon {
+    flex-basis: 38px;
+    width: 38px;
+    height: 38px;
+  }
+  .stat small {
+    font-size: 10px;
+  }
+  .stat strong {
+    font-size: 21px;
+  }
+  .hero-actions {
+    flex-wrap: wrap;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *:before,
+  *:after {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+</style>
+<style>
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 9% 92%, rgba(255,255,255,.82), transparent 25%),
+    radial-gradient(ellipse at 87% 8%, rgba(255,255,255,.7), transparent 24%),
+    linear-gradient(145deg, #a9c7e5 0%, #cbd9e8 47%, #e6edf2 100%);
+}
+.app {
+  max-width: 1900px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 18px;
+}
+.sidebar {
+  inset: 18px auto 18px 18px;
+  width: 72px;
+  align-items: center;
+  padding: 14px 10px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 20px;
+  background: linear-gradient(180deg, #172c45 0%, #20394f 62%, #183b4e 100%);
+  box-shadow: 0 14px 34px rgba(27,48,74,.25);
+}
+.brand {
+  justify-content: center;
+  padding: 3px 0 22px;
+}
+.brandmark {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  border-radius: 13px;
+  background: linear-gradient(145deg, #90e9cb, #43c7c0);
+  color: #15515b;
+}
+.brand > div:last-child,
+.navlabel {
+  display: none;
+}
+.nav {
+  width: 100%;
+  justify-items: center;
+  gap: 7px;
+}
+.nav button {
+  justify-content: center;
+  width: 46px;
+  min-height: 44px;
+  padding: 8px;
+  border-radius: 13px;
+  font-size: 0;
+  color: #c6d6e5;
+}
+.nav button:hover {
+  transform: none;
+  background: rgba(255,255,255,.1);
+}
+.nav button.active {
+  background: linear-gradient(145deg, rgba(91,220,177,.28), rgba(91,220,177,.1));
+  box-shadow: inset 0 0 0 1px rgba(114,227,189,.16);
+  color: #fff;
+}
+.nav .ico {
+  width: auto;
+  font-size: 19px;
+}
+.sidebottom {
+  width: 100%;
+  padding: 12px 0 0;
+  border-top: 1px solid rgba(255,255,255,.14);
+  font-size: 0;
+  text-align: center;
+}
+.sidebottom a {
+  display: grid !important;
+  width: 42px;
+  height: 42px;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  place-items: center;
+  border-radius: 13px;
+  font-size: 0;
+}
+.sidebottom a:after {
+  content: "↗";
+  font-size: 18px;
+}
+.main {
+  width: calc(100% - 94px);
+  min-height: calc(100vh - 36px);
+  margin-left: 94px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.7);
+  border-radius: 21px;
+  background: #fdfefe;
+  box-shadow: 0 18px 48px rgba(43,65,88,.19);
+}
+.topbar {
+  height: 68px;
+  padding: 0 24px;
+  border-bottom: 1px solid #e8edf3;
+  background: rgba(255,255,255,.96);
+  backdrop-filter: blur(14px);
+}
+.crumb {
+  font-size: 15px;
+}
+.topright {
+  gap: 10px;
+}
+.status {
+  max-width: 240px;
+  background: #eef7f7;
+  color: #277e79;
+  white-space: nowrap;
+}
+.content {
+  max-width: 1700px;
+  padding: 16px 22px 26px;
+}
+.hero {
+  display: flex;
+  min-height: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 8px 0 13px;
+  overflow: visible;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--ink);
+}
+.hero:before,
+.hero:after {
+  display: none;
+}
+.hero-copy {
+  min-width: 0;
+}
+.eyebrow {
+  color: #418d9a;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+}
+.hero h1 {
+  margin: 2px 0 1px;
+  color: #25364a;
+  font-size: 22px;
+  line-height: 1.4;
+}
+.hero p {
+  max-width: 730px;
+  color: #758398;
+  font-size: 11px;
+  line-height: 1.65;
+}
+.hero-actions {
+  flex: 0 0 auto;
+  margin: 0;
+}
+.hero-actions .btn.light {
+  border: 1px solid #e0e7ef;
+  background: #fff;
+  color: #314259;
+}
+.hero-actions .btn.ghost {
+  border: 1px solid #dfe7ef;
+  background: #fff;
+  color: #477d91;
+}
+.btn {
+  border-radius: 9px;
+  background: #258f9e;
+}
+.btn.outline {
+  border-color: #dce5ed;
+  color: #367b89;
+}
+.stats {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 7px 0 13px;
+}
+.stat {
+  min-height: 88px;
+  padding: 12px 14px;
+  gap: 11px;
+  border-color: #e7edf3;
+  border-radius: 13px;
+  box-shadow: 0 3px 11px rgba(32,57,91,.045);
+}
+.stat:after {
+  width: 58px;
+  height: 58px;
+  right: -24px;
+  top: -25px;
+  opacity: .8;
+}
+.staticon {
+  flex-basis: 36px;
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  font-size: 16px;
+}
+.stat small {
+  color: #78869a;
+  font-size: 10px;
+}
+.stat strong {
+  margin-top: 2px;
+  font-size: 23px;
+}
+.dashboard-charts {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(260px, .9fr);
+  gap: 11px;
+  margin: 0 0 13px;
+}
+.chart-panel {
+  min-width: 0;
+  padding: 14px 15px;
+  border-color: #e6ebf2;
+  border-radius: 13px;
+  box-shadow: 0 3px 11px rgba(32,57,91,.045);
+}
+.chart-panel .panelhead {
+  margin-bottom: 6px;
+}
+.chart-panel .panelhead h3 {
+  color: #34445a;
+  font-size: 13px;
+}
+.chart-subtitle {
+  margin: 1px 0 0;
+  color: #8995a6;
+  font-size: 10px;
+}
+.chart-scroller {
+  width: 100%;
+  overflow-x: auto;
+}
+.module-chart {
+  display: block;
+  width: 100%;
+  min-width: 550px;
+  height: auto;
+  overflow: visible;
+}
+.module-chart .chart-grid {
+  stroke: #e9eef4;
+  stroke-dasharray: 3 5;
+}
+.module-chart .chart-axis-label,
+.module-chart .chart-category-label {
+  fill: #8190a2;
+  font-family: inherit;
+  font-size: 11px;
+}
+.module-chart .chart-value-label {
+  fill: #48596e;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 600;
+}
+.module-chart .chart-bar {
+  transition: opacity .2s ease;
+}
+.module-chart .chart-bar:hover {
+  opacity: .72;
+}
+.chart-empty {
+  display: grid;
+  min-height: 230px;
+  place-items: center;
+  color: #8794a5;
+  font-size: 12px;
+  text-align: center;
+}
+.donut-layout {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 225px;
+}
+.donut-wrap {
+  flex: 0 0 142px;
+  display: grid;
+  place-items: center;
+}
+.donut-chart {
+  display: grid;
+  width: 136px;
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: 50%;
+  background: #edf1f5;
+}
+.donut-hole {
+  display: grid;
+  width: 92px;
+  aspect-ratio: 1;
+  place-content: center;
+  border-radius: 50%;
+  background: #fff;
+  text-align: center;
+}
+.donut-hole strong {
+  color: #29394e;
+  font-size: 22px;
+  line-height: 1.2;
+}
+.donut-hole small {
+  color: #8794a5;
+  font-size: 10px;
+}
+.donut-legend {
+  display: grid;
+  flex: 1 1 auto;
+  gap: 5px;
+  min-width: 0;
+  max-height: 242px;
+  overflow: auto;
+}
+.legend-item {
+  display: grid;
+  grid-template-columns: 8px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 7px;
+  color: #637287;
+  font-size: 10px;
+  line-height: 1.4;
+}
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.legend-item b {
+  color: #36465a;
+  font-size: 10px;
+  font-weight: 600;
+}
+.sectionhead {
+  align-items: center;
+  margin: 17px 0 9px;
+}
+.sectionhead h2 {
+  color: #34445a;
+  font-size: 15px;
+}
+.sectionhead p {
+  color: #8793a3;
+  font-size: 10px;
+}
+.sectionhead > .tag {
+  background: #eef5f7;
+  color: #46838e;
+}
+.toolgrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+}
+.toolcard {
+  min-height: 135px;
+  padding: 13px 14px 11px;
+  border-color: #e7edf3;
+  border-radius: 13px;
+  box-shadow: 0 3px 11px rgba(32,57,91,.045);
+}
+.toolcard:after {
+  width: 68px;
+  height: 68px;
+  right: -28px;
+  bottom: -34px;
+  opacity: .55;
+}
+.toolcard:before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  border-radius: 3px 0 0 3px;
+  background: var(--tool-color);
+  opacity: .72;
+}
+.toolcard:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--tool-color) 36%, white);
+  box-shadow: 0 9px 20px rgba(32,57,91,.09);
+}
+.toolicon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  font-size: 16px;
+}
+.toolcard h3 {
+  margin: 8px 0 2px;
+  color: #33445a;
+  font-size: 12px;
+}
+.toolcard p {
+  color: #7d8b9d;
+  font-size: 10px;
+  line-height: 1.55;
+}
+.tool-open {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 7px;
+  color: var(--tool-color);
+  font-size: 10px;
+  font-weight: 600;
+}
+.tool-open span {
+  font-size: 14px;
+}
+.dashboard-activity {
+  margin-top: 11px;
+  padding: 13px 15px;
+}
+.dashboard-activity .activity {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px 18px;
+}
+.dashboard-activity .activityrow {
+  min-width: 0;
+  padding: 7px 0;
+  border-bottom: 1px solid #eef1f5;
+  color: #57677c;
+  font-size: 10px;
+}
+.dashboard-activity .activityrow time {
+  font-size: 9px;
+}
+.dashboard-activity .dot {
+  flex: 0 0 7px;
+}
+.dashboard-activity .empty {
+  grid-column: 1 / -1;
+}
+@media (max-width: 1120px) {
+  .dashboard-charts {
+    grid-template-columns: minmax(0, 1.4fr) minmax(230px, .9fr);
+  }
+}
+@media (max-width: 900px) {
+  .app {
+    padding: 12px;
+  }
+  .sidebar {
+    inset: 12px auto 12px 12px;
+  }
+  .main {
+    width: calc(100% - 88px);
+    min-height: calc(100vh - 24px);
+    margin-left: 88px;
+  }
+  .content {
+    padding: 14px 16px 22px;
+  }
+  .dashboard-charts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .donut-layout {
+    min-height: 180px;
+  }
+  .donut-legend {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-height: none;
+  }
+}
+@media (max-width: 760px) {
+  .app {
+    padding: 8px;
+  }
+  .sidebar {
+    inset: 8px auto 8px 8px;
+    width: 72px;
+    align-items: center;
+    transform: translateX(-120%);
+  }
+  .sidebar.open {
+    width: min(250px, calc(100vw - 32px));
+    align-items: stretch;
+    transform: translateX(0);
+  }
+  .sidebar.open .brand {
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 4px 8px 20px;
+  }
+  .sidebar.open .brand > div:last-child,
+  .sidebar.open .navlabel {
+    display: block;
+  }
+  .sidebar.open .nav {
+    justify-items: stretch;
+  }
+  .sidebar.open .nav button {
+    justify-content: flex-start;
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+  .sidebar.open .nav .ico {
+    width: 20px;
+  }
+  .sidebar.open .sidebottom {
+    padding: 14px 10px;
+    font-size: 11px;
+    text-align: left;
+  }
+  .sidebar.open .sidebottom a {
+    display: inline-block !important;
+    width: auto;
+    height: auto;
+    margin: 12px 0 0 !important;
+    padding: 7px 10px !important;
+    font-size: 11px;
+  }
+  .sidebar.open .sidebottom a:after {
+    display: none;
+  }
+  .main {
+    width: 100%;
+    min-height: calc(100vh - 16px);
+    margin-left: 0;
+    border-radius: 16px;
+  }
+  .topbar {
+    height: 62px;
+    padding: 0 13px;
+  }
+  .topright {
+    gap: 7px;
+  }
+  .status {
+    max-width: 135px;
+    overflow: hidden;
+    font-size: 9px;
+    text-overflow: ellipsis;
+  }
+  .content {
+    padding: 12px 12px 20px;
+  }
+  .hero {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+    padding: 5px 0 12px;
+  }
+  .hero h1 {
+    font-size: 19px;
+  }
+  .hero p {
+    font-size: 10px;
+  }
+  .hero-actions {
+    flex-wrap: wrap;
+  }
+  .hero-actions .btn {
+    padding: 8px 10px;
+    font-size: 10px;
+  }
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .stat {
+    min-height: 76px;
+    padding: 10px;
+  }
+  .dashboard-charts {
+    gap: 9px;
+  }
+  .chart-panel {
+    padding: 12px;
+  }
+  .donut-layout {
+    justify-content: center;
+    gap: 12px;
+  }
+  .donut-wrap {
+    flex-basis: 120px;
+  }
+  .donut-chart {
+    width: 116px;
+  }
+  .donut-hole {
+    width: 78px;
+  }
+  .donut-legend {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .sectionhead h2 {
+    font-size: 14px;
+  }
+  .toolgrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 480px) {
+  .toolgrid {
+    grid-template-columns: 1fr;
+  }
+  .dashboard-activity .activity {
+    grid-template-columns: 1fr;
+  }
+  .sectionhead > .tag {
+    font-size: 8px;
+    white-space: nowrap;
+  }
+}
+</style>
+<style>
+.hero {
+  position: relative;
+  padding: 14px 17px;
+  border: 2px solid transparent;
+  border-radius: 17px;
+  background:
+    linear-gradient(135deg, #fff 0%, #f8fcff 54%, #f6fffb 100%) padding-box,
+    linear-gradient(108deg, #32b8c5 0%, #51c7a2 28%, #f4bc62 52%, #8d7ce2 76%, #f27b91 100%) border-box;
+  box-shadow: 0 8px 23px rgba(58, 136, 155, .12), 0 0 0 3px rgba(80, 194, 177, .08);
+}
+.hero h1 {
+  background: linear-gradient(100deg, #245b78 0%, #248e91 48%, #538566 100%);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero .eyebrow {
+  color: #268d94;
+  font-weight: 700;
+}
+.toolcard {
+  --tool-tint: #fff0f1;
+  --tool-surface: #fff8f8;
+  border-color: color-mix(in srgb, var(--tool-color) 19%, white);
+  background: linear-gradient(137deg, var(--tool-tint) 0%, var(--tool-surface) 72%, #fff 145%);
+}
+.toolcard:nth-child(1) { --tool-color: #f36f7b; --tool-tint: #fff0f1; --tool-surface: #fff8f8; }
+.toolcard:nth-child(2) { --tool-color: #24b7c5; --tool-tint: #e7f8fa; --tool-surface: #f5fcfd; }
+.toolcard:nth-child(3) { --tool-color: #6a76ef; --tool-tint: #eeefff; --tool-surface: #f8f8ff; }
+.toolcard:nth-child(4) { --tool-color: #31b597; --tool-tint: #e8f8f2; --tool-surface: #f6fcf9; }
+.toolcard:nth-child(5) { --tool-color: #f2a64a; --tool-tint: #fff4e5; --tool-surface: #fffbf5; }
+.toolcard:nth-child(6) { --tool-color: #9a78df; --tool-tint: #f3edff; --tool-surface: #faf8ff; }
+.toolcard:nth-child(7) { --tool-color: #4da7d9; --tool-tint: #eaf5fc; --tool-surface: #f6fbfe; }
+.toolcard:nth-child(8) { --tool-color: #e48665; --tool-tint: #fff0ea; --tool-surface: #fff9f6; }
+.toolcard:nth-child(9) { --tool-color: #58b9a2; --tool-tint: #e8f7f3; --tool-surface: #f6fcfa; }
+.toolcard:before {
+  width: 4px;
+  background: linear-gradient(180deg, var(--tool-color), color-mix(in srgb, var(--tool-color) 45%, white));
+  opacity: 1;
+}
+.toolcard:after {
+  background: radial-gradient(circle, color-mix(in srgb, var(--tool-color) 16%, white), transparent 72%);
+  opacity: .8;
+}
+.toolcard:hover {
+  background: linear-gradient(137deg, color-mix(in srgb, var(--tool-tint) 78%, white) 0%, var(--tool-surface) 72%, #fff 145%);
+}
+.toolcard .toolicon {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  width: 48px;
+  height: 48px;
+  overflow: hidden;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--tool-color) 26%, white);
+  border-radius: 15px;
+  background:
+    radial-gradient(ellipse at 30% 14%, rgba(255,255,255,.98), rgba(255,255,255,0) 48%),
+    linear-gradient(145deg, #fff 2%, var(--tool-tint) 58%, color-mix(in srgb, var(--tool-color) 15%, white) 100%);
+  box-shadow:
+    0 5px 0 color-mix(in srgb, var(--tool-color) 21%, white),
+    0 8px 13px color-mix(in srgb, var(--tool-color) 18%, transparent),
+    inset 0 2px 3px rgba(255,255,255,.95),
+    inset 0 -2px 3px color-mix(in srgb, var(--tool-color) 10%, transparent);
+  color: var(--tool-color);
+  font-family: "Segoe UI Emoji", "Apple Color Emoji", sans-serif !important;
+  font-size: 25px;
+  line-height: 1;
+  text-shadow: 0 2px 1px rgba(42, 63, 85, .12);
+  transform: translateY(-1px);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.toolcard:hover .toolicon {
+  transform: translateY(-2px) rotate(-3deg) scale(1.04);
+  box-shadow:
+    0 6px 0 color-mix(in srgb, var(--tool-color) 21%, white),
+    0 11px 16px color-mix(in srgb, var(--tool-color) 23%, transparent),
+    inset 0 2px 3px rgba(255,255,255,.95),
+    inset 0 -2px 3px color-mix(in srgb, var(--tool-color) 10%, transparent);
+}
+.toolcard .tag {
+  border: 1px solid color-mix(in srgb, var(--tool-color) 18%, white);
+  background: color-mix(in srgb, var(--tool-tint) 72%, white);
+  color: color-mix(in srgb, var(--tool-color) 78%, #26384b);
+}
+.toolcard h3 {
+  color: #314259;
+}
+.tool-open {
+  color: color-mix(in srgb, var(--tool-color) 80%, #26384b);
+}
+@media (max-width: 760px) {
+  .hero {
+    padding: 12px 13px;
+  }
+}
+</style>
+<style>
+.activity-dot {
+  flex: 0 0 9px;
+  width: 9px;
+  height: 9px;
+  background: var(--activity-color, #58b9a2);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--activity-color, #58b9a2) 15%, white);
+}
+.activity-dot.activity-dot-map,
+.activity-dot.activity-dot-other { --activity-color: #f36f7b; }
+.activity-dot.activity-dot-genogram { --activity-color: #24b7c5; }
+.activity-dot.activity-dot-organization { --activity-color: #6a76ef; }
+.activity-dot.activity-dot-resources { --activity-color: #31b597; }
+.activity-dot.activity-dot-calendar { --activity-color: #f2a64a; }
+.activity-dot.activity-dot-history { --activity-color: #9a78df; }
+.activity-dot.activity-dot-people { --activity-color: #4da7d9; }
+.activity-dot.activity-dot-survey { --activity-color: #e48665; }
+.activity-dot.activity-dot-healthSurvey { --activity-color: #58b9a2; }
+.health-survey-progress {
+  gap: 9px;
+}
+.health-survey-progress button {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 76px;
+  align-items: center;
+  gap: 9px;
+  overflow: hidden;
+  padding: 10px;
+  border-color: color-mix(in srgb, var(--step-color, #24b7c5) 24%, white);
+  background: linear-gradient(140deg, var(--step-tint, #eaf8fa), #fff 86%);
+  box-shadow: 0 3px 11px color-mix(in srgb, var(--step-color, #24b7c5) 10%, transparent);
+  color: #43556a;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.health-survey-progress button:after {
+  content: "";
+  position: absolute;
+  right: -17px;
+  bottom: -27px;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--step-color, #24b7c5) 11%, white);
+  pointer-events: none;
+}
+.health-survey-progress button:nth-child(1) { --step-color: #f36f7b; --step-tint: #fff0f1; }
+.health-survey-progress button:nth-child(2) { --step-color: #24b7c5; --step-tint: #e7f8fa; }
+.health-survey-progress button:nth-child(3) { --step-color: #31b597; --step-tint: #e8f8f2; }
+.health-survey-progress button:nth-child(4) { --step-color: #9a78df; --step-tint: #f3edff; }
+.health-survey-progress button:nth-child(5) { --step-color: #f2a64a; --step-tint: #fff4e5; }
+.health-survey-progress button:hover {
+  transform: translateY(-2px);
+  border-color: var(--step-color);
+  box-shadow: 0 7px 15px color-mix(in srgb, var(--step-color) 17%, transparent);
+}
+.health-survey-progress button.active {
+  border-color: var(--step-color);
+  background: linear-gradient(140deg, var(--step-tint), #fff 90%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--step-color) 34%, transparent), 0 5px 13px color-mix(in srgb, var(--step-color) 15%, transparent);
+  color: color-mix(in srgb, var(--step-color) 82%, #293b4e);
+  font-weight: 600;
+}
+.health-survey-progress button.complete {
+  color: color-mix(in srgb, var(--step-color) 82%, #293b4e);
+}
+.health-step-icon {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--step-color) 21%, white);
+  border-radius: 12px;
+  background: linear-gradient(145deg, #fff, var(--step-tint));
+  box-shadow: 0 3px 0 color-mix(in srgb, var(--step-color) 19%, white), 0 5px 9px color-mix(in srgb, var(--step-color) 14%, transparent), inset 0 1px 2px #fff;
+  font-family: "Segoe UI Emoji", "Apple Color Emoji", sans-serif;
+  font-size: 20px;
+}
+.health-step-label {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.health-step-label b {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--step-color);
+  font-size: 10px;
+  letter-spacing: .3px;
+}
+.house-marker {
+  position: relative;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 2px solid rgba(255,255,255,.98);
+  border-radius: 15px;
+  background: linear-gradient(145deg, #fff, var(--house-tint, #e8f7f3));
+  box-shadow: 0 4px 0 color-mix(in srgb, var(--house-color, #258f9e) 40%, #738394), 0 7px 13px rgba(22,39,57,.35), inset 0 1px 2px #fff;
+  font-family: "Segoe UI Emoji", "Apple Color Emoji", sans-serif;
+  font-size: 25px;
+  line-height: 1;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.house-marker:before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border: 1px solid color-mix(in srgb, var(--house-color, #258f9e) 27%, white);
+  border-radius: 11px;
+  pointer-events: none;
+}
+.house-marker:after {
+  content: "";
+  position: absolute;
+  top: calc(100% - 1px);
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  background: var(--house-tint, #e8f7f3);
+  box-shadow: 3px 4px 3px rgba(22,39,57,.12);
+  transform: translateX(-50%) rotate(45deg);
+}
+.house-marker span {
+  display: block;
+  filter: drop-shadow(0 2px 1px rgba(20,35,50,.2));
+}
+.house-marker:hover {
+  transform: translateY(-3px) scale(1.08);
+  box-shadow: 0 6px 0 color-mix(in srgb, var(--house-color, #258f9e) 40%, #738394), 0 11px 16px rgba(22,39,57,.38), inset 0 1px 2px #fff;
+}
+.house-marker-shell {
+  position: relative;
+  display: grid;
+  width: 58px;
+  height: 56px;
+  place-items: start center;
+}
+.house-marker-shell .disease-marker {
+  position: absolute;
+  top: -8px;
+  right: -18px;
+  z-index: 1;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 3px;
+  border-width: 1px;
+  font-size: 10px;
+  box-shadow: 0 2px 5px rgba(21,37,52,.35);
+}
+.leaflet-marker-icon:has(.house-marker) {
+  filter: drop-shadow(0 2px 3px rgba(16,30,44,.12));
+}
+@media(max-width:760px) {
+  .health-survey-progress {
+    gap: 7px;
+  }
+  .health-survey-progress button {
+    min-height: 66px;
+    gap: 7px;
+    padding: 7px;
+  }
+  .health-step-icon {
+    flex-basis: 32px;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    font-size: 17px;
+  }
+}
+</style>
+<style>
+.page {
+  --page-accent: #258f9e;
+  --page-accent-strong: #287c91;
+  --page-tint: #eaf5f8;
+}
+#page-dashboard {
+  --page-accent: #31a99e;
+  --page-accent-strong: #277b9c;
+  --page-tint: #eaf8f5;
+}
+#page-map {
+  --page-accent: #f36f7b;
+  --page-accent-strong: #cc5868;
+  --page-tint: #fff0f1;
+}
+#page-genogram {
+  --page-accent: #24b7c5;
+  --page-accent-strong: #188896;
+  --page-tint: #e7f8fa;
+}
+#page-organization {
+  --page-accent: #6a76ef;
+  --page-accent-strong: #535fc8;
+  --page-tint: #eeefff;
+}
+#page-resources {
+  --page-accent: #31b597;
+  --page-accent-strong: #23876f;
+  --page-tint: #e8f8f2;
+}
+#page-calendar {
+  --page-accent: #f2a64a;
+  --page-accent-strong: #bd7827;
+  --page-tint: #fff4e5;
+}
+#page-history {
+  --page-accent: #9a78df;
+  --page-accent-strong: #7555b6;
+  --page-tint: #f3edff;
+}
+#page-people {
+  --page-accent: #4da7d9;
+  --page-accent-strong: #337da8;
+  --page-tint: #eaf5fc;
+}
+#page-survey {
+  --page-accent: #e48665;
+  --page-accent-strong: #b65f43;
+  --page-tint: #fff0ea;
+}
+#page-healthSurvey {
+  --page-accent: #58b9a2;
+  --page-accent-strong: #388a77;
+  --page-tint: #e8f7f3;
+}
+.page .sectionhead {
+  padding-bottom: 10px;
+  border-bottom: 1px solid color-mix(in srgb, var(--page-accent) 18%, #e8edf2);
+}
+.page .sectionhead h2 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--page-accent-strong);
+}
+.page .sectionhead h2:before {
+  content: "";
+  flex: 0 0 4px;
+  width: 4px;
+  height: 23px;
+  border-radius: 5px;
+  background: linear-gradient(180deg, var(--page-accent), color-mix(in srgb, var(--page-accent) 48%, white));
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--page-accent) 24%, transparent);
+}
+.page .sectionhead p {
+  color: #78889a;
+}
+.page .sectionhead > .toolbar .btn:not(.outline):not(.danger) {
+  background: linear-gradient(115deg, var(--page-accent-strong), var(--page-accent));
+}
+.page .sectionhead > .toolbar .btn.outline {
+  border-color: color-mix(in srgb, var(--page-accent) 26%, white);
+  color: var(--page-accent-strong);
+}
+.page .panelhead {
+  padding-bottom: 9px;
+  border-bottom: 1px solid color-mix(in srgb, var(--page-accent) 15%, #e8edf2);
+}
+.page .panelhead h3 {
+  color: var(--page-accent-strong);
+}
+.page .panelhead .muted {
+  padding: 4px 8px;
+  border-radius: 20px;
+  background: var(--page-tint);
+  color: var(--page-accent-strong);
+}
+.page .tablewrap th {
+  background: color-mix(in srgb, var(--page-tint) 75%, white);
+  color: var(--page-accent-strong);
+}
+.page .health-survey-step-title,
+.page .health-survey-section h4,
+.page .health-survey-members-title,
+.page .survey-household-fields h4,
+.page .survey-members-title,
+.page .health-member-group h5 {
+  color: var(--page-accent-strong);
+}
+#page-dashboard .sectionhead h2:before {
+  background: linear-gradient(180deg, #24b7c5, #9a78df 52%, #f2a64a);
+}
+#page-dashboard .chart-panel .panelhead h3 {
+  color: #35556e;
+}
+#page-map .notice {
+  border-color: #f2d9dc;
+  background: linear-gradient(110deg, #fff5f5, #fff9f0);
+}
+</style>
+<style>
+.sidebar {
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(187, 221, 240, .24);
+  background:
+    radial-gradient(ellipse at 50% -10%, rgba(52, 164, 184, .28), transparent 45%),
+    linear-gradient(180deg, #142d48 0%, #183b55 54%, #163b4b 100%);
+  box-shadow: 0 16px 38px rgba(22, 43, 68, .3), inset 0 1px 0 rgba(255,255,255,.12);
+}
+.sidebar:before {
+  position: absolute;
+  z-index: -1;
+  top: 78px;
+  right: -25px;
+  left: -25px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(164, 222, 226, .32), transparent);
+  content: "";
+}
+.brandmark {
+  border: 1px solid rgba(255,255,255,.52);
+  background: linear-gradient(145deg, #a5f2d5 0%, #55d5c9 62%, #58bce3 100%);
+  box-shadow: 0 5px 16px rgba(50, 201, 188, .3), inset 0 1px 2px rgba(255,255,255,.85);
+}
+.nav {
+  gap: 8px;
+}
+.nav button {
+  position: relative;
+  width: 48px;
+  min-height: 46px;
+  overflow: visible;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  color: #b7c9dc;
+  transition: background .2s ease, color .2s ease, border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+.nav .ico {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 9px;
+  background: rgba(224, 238, 250, .09);
+  color: #c7d7e8;
+  font-size: 17px;
+  transition: inherit;
+}
+.nav button:nth-child(1) .ico { color: #81dfd0; }
+.nav button:nth-child(2) .ico { color: #ff9a9d; }
+.nav button:nth-child(3) .ico { color: #54d1df; }
+.nav button:nth-child(4) .ico { color: #a4a8ff; }
+.nav button:nth-child(5) .ico { color: #64d5af; }
+.nav button:nth-child(6) .ico { color: #ffc274; }
+.nav button:nth-child(7) .ico { color: #c4a4ff; }
+.nav button:nth-child(8) .ico { color: #80c4f1; }
+.nav button:nth-child(9) .ico { color: #ffab83; }
+.nav button:nth-child(10) .ico { color: #6ed6bf; }
+.nav button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(213, 235, 248, .16);
+  background: rgba(232, 244, 255, .1);
+  box-shadow: 0 5px 12px rgba(7, 23, 40, .15);
+}
+.nav button.active {
+  border-color: rgba(113, 226, 205, .28);
+  background: linear-gradient(135deg, rgba(53, 185, 169, .27), rgba(54, 145, 178, .2));
+  box-shadow: inset 0 0 0 1px rgba(194, 255, 239, .06), 0 5px 14px rgba(8, 24, 40, .2);
+}
+.nav button.active:before {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: -10px;
+  width: 3px;
+  border-radius: 0 4px 4px 0;
+  background: #75e3ca;
+  box-shadow: 0 0 10px rgba(117, 227, 202, .65);
+  content: "";
+}
+.nav button.active .ico {
+  background: rgba(179, 250, 230, .16);
+  color: #f1fffb;
+}
+.nav button:focus-visible {
+  outline: 2px solid #9debd9;
+  outline-offset: 3px;
+}
+.sidebottom {
+  border-color: rgba(210, 232, 245, .18);
+}
+.sidebottom a {
+  border: 1px solid rgba(201, 230, 240, .16) !important;
+  background: rgba(215, 241, 247, .08) !important;
+  color: #c6e4e6 !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.09);
+}
+.sidebottom a:hover {
+  border-color: rgba(130, 224, 211, .45) !important;
+  background: rgba(85, 195, 179, .2) !important;
+}
+.hero {
+  position: relative;
+  isolation: isolate;
+  min-height: 96px;
+  overflow: hidden;
+  border: 1px solid #247a87;
+  border-radius: 16px;
+  background: #1d7482;
+  box-shadow: 0 10px 24px rgba(32, 111, 130, .2), inset 0 1px 0 rgba(255,255,255,.16);
+  color: #fff;
+}
+.hero:before {
+  position: absolute;
+  z-index: -1;
+  top: -66px;
+  right: 15%;
+  width: 200px;
+  height: 200px;
+  border: 1px solid rgba(218, 255, 246, .2);
+  border-radius: 50%;
+  box-shadow: 0 0 0 23px rgba(218, 255, 246, .07), 0 0 0 50px rgba(218, 255, 246, .045);
+  content: "";
+}
+.hero:after {
+  position: absolute;
+  z-index: -1;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #76dfd1, #a9e9c2 48%, #f6d184 76%, #f4a1a1);
+  content: "";
+}
+.hero h1 {
+  background: none;
+  color: #fff;
+  -webkit-text-fill-color: #fff;
+  text-shadow: 0 1px 1px rgba(11, 45, 59, .14);
+}
+.hero .eyebrow {
+  color: #a9f0df;
+}
+.hero p {
+  color: rgba(246, 255, 253, .9);
+}
+.hero-actions .btn.light {
+  border-color: rgba(255,255,255,.9);
+  background: #fff;
+  color: #176577;
+  box-shadow: 0 3px 9px rgba(11, 49, 62, .14);
+}
+.hero-actions .btn.ghost {
+  border-color: rgba(239,255,252,.5);
+  background: rgba(12, 65, 81, .2);
+  color: #fff;
+}
+.hero-actions .btn.ghost:hover {
+  background: rgba(12, 65, 81, .38);
+}
+@media (max-width: 760px) {
+  .hero {
+    min-height: 0;
+    padding: 12px 13px;
+  }
+}
+</style>
 </head>
 <body>
 <div class="app">
 <aside class="sidebar" id="sidebar">
  <div class="brand"><div class="brandmark">✚</div><div><b>COMMUNITY HEALTH</b><small>INTELLIGENCE PLATFORM</small></div></div>
  <div class="navlabel">WORKSPACE</div><nav class="nav" id="nav">
- <button class="active" data-page="dashboard"><span class="ico">▦</span>ภาพรวม Dashboard</button>
- <button data-page="map"><span class="ico">⌖</span>1. แผนที่เดินดิน</button>
- <button data-page="genogram"><span class="ico">♧</span>2. ผังเครือญาติ</button>
- <button data-page="organization"><span class="ico">⌘</span>3. องค์กรชุมชน</button>
- <button data-page="resources"><span class="ico">✣</span>4. ระบบสุขภาพชุมชน</button>
- <button data-page="calendar"><span class="ico">▦</span>5. ปฏิทินชุมชน</button>
- <button data-page="history"><span class="ico">◷</span>6. ประวัติชุมชน</button>
- <button data-page="people"><span class="ico">♙</span>7. ประวัติบุคคลสำคัญ</button>
- <button data-page="survey"><span class="ico">▤</span>8. สำรวจข้อมูลพื้นฐาน</button>
- <button data-page="healthSurvey"><span class="ico">✚</span>9. สำรวจสุขภาพครัวเรือน</button>
+ <button class="active" data-page="dashboard" aria-label="ภาพรวม Dashboard" title="ภาพรวม Dashboard"><span class="ico">▦</span>ภาพรวม Dashboard</button>
+ <button data-page="map" aria-label="1. แผนที่เดินดิน" title="1. แผนที่เดินดิน"><span class="ico">⌖</span>1. แผนที่เดินดิน</button>
+ <button data-page="genogram" aria-label="2. ผังเครือญาติ" title="2. ผังเครือญาติ"><span class="ico">♧</span>2. ผังเครือญาติ</button>
+ <button data-page="organization" aria-label="3. องค์กรชุมชน" title="3. องค์กรชุมชน"><span class="ico">⌘</span>3. องค์กรชุมชน</button>
+ <button data-page="resources" aria-label="4. ระบบสุขภาพชุมชน" title="4. ระบบสุขภาพชุมชน"><span class="ico">✣</span>4. ระบบสุขภาพชุมชน</button>
+ <button data-page="calendar" aria-label="5. ปฏิทินชุมชน" title="5. ปฏิทินชุมชน"><span class="ico">▦</span>5. ปฏิทินชุมชน</button>
+ <button data-page="history" aria-label="6. ประวัติชุมชน" title="6. ประวัติชุมชน"><span class="ico">◷</span>6. ประวัติชุมชน</button>
+ <button data-page="people" aria-label="7. ประวัติบุคคลสำคัญ" title="7. ประวัติบุคคลสำคัญ"><span class="ico">♙</span>7. ประวัติบุคคลสำคัญ</button>
+ <button data-page="survey" aria-label="8. สำรวจข้อมูลพื้นฐาน" title="8. สำรวจข้อมูลพื้นฐาน"><span class="ico">▤</span>8. สำรวจข้อมูลพื้นฐาน</button>
+ <button data-page="healthSurvey" aria-label="9. สำรวจสุขภาพครัวเรือน" title="9. สำรวจสุขภาพครัวเรือน"><span class="ico">✚</span>9. สำรวจสุขภาพครัวเรือน</button>
  </nav>
  <div class="sidebottom">COMMUNITY FIELDWORK SUITE<br>หมู่ 2 และหมู่ 10 · ตำบลเก่างิ้ว<br>อำเภอพล จังหวัดขอนแก่น<br><a class="btn ghost sm" href="https://docs.google.com/spreadsheets/d/17Oxw03fn-A8JcGbwaLTp7zDmpAns37eIpFJ-8xbLQlQ/edit?gid=0#gid=0" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:12px;text-decoration:none">เปิด Google Sheet ↗</a></div>
 </aside>
@@ -99,21 +1592,25 @@ body,body *{font-family:'TH Sarabun New','Sarabun',sans-serif!important}
 <header class="topbar"><div style="display:flex;align-items:center;gap:12px"><button class="hamb" onclick="$('#sidebar').classList.toggle('open')">☰</button><div class="crumb" id="crumb">ภาพรวม Dashboard<small>Community assessment · 7 tools + 2 surveys</small></div></div><div class="topright"><span class="status" id="connStatus">● ยังไม่เชื่อมต่อฐานข้อมูล</span><div class="avatar" id="userAvatar">?</div><button class="btn outline sm" id="authBtn" onclick="openAuth()">เข้าสู่ระบบ</button></div></header>
 <div class="content">
 <section class="page active" id="page-dashboard">
- <div class="hero"><div class="eyebrow">COMMUNITY HEALTH INTELLIGENCE</div><h1>เข้าใจชุมชน ด้วยข้อมูลที่เชื่อมโยงกัน</h1><p>ระบบจัดเก็บและวิเคราะห์ข้อมูลเครื่องมือศึกษาชุมชน 7 ชิ้น พร้อมแบบสำรวจ 2 ชุด สำหรับงานภาคสนาม หมู่ 2 และหมู่ 10 ตำบลเก่างิ้ว อำเภอพล จังหวัดขอนแก่น</p><div class="hero-actions"><button class="btn light" onclick="go('map')">เริ่มสำรวจข้อมูล →</button><button class="btn ghost" onclick="openAuth()">เข้าสู่ระบบจัดการข้อมูล</button></div></div>
+ <div class="hero"><div class="hero-copy"><div class="eyebrow">COMMUNITY HEALTH INTELLIGENCE</div><h1>ภาพรวมสุขภาพชุมชน</h1><p>ติดตามข้อมูลจากเครื่องมือศึกษาชุมชน 7 ชิ้น และแบบสำรวจ 2 ชุด · หมู่ 2 และหมู่ 10 ตำบลเก่างิ้ว อำเภอพล จังหวัดขอนแก่น</p></div><div class="hero-actions"><button class="btn light" onclick="go('map')">เปิดแผนที่ชุมชน →</button><button class="btn ghost" onclick="openAuth()">เข้าสู่ระบบจัดการข้อมูล</button></div></div>
  <div class="stats"><div class="stat"><div class="staticon">⌂</div><div><small>ครัวเรือนที่บันทึก</small><strong id="statHouse">—</strong></div></div><div class="stat"><div class="staticon">♧</div><div><small>สมาชิกในผังเครือญาติ</small><strong id="statPeople">—</strong></div></div><div class="stat"><div class="staticon">✣</div><div><small>ทรัพยากรชุมชน</small><strong id="statResource">—</strong></div></div><div class="stat"><div class="staticon">▤</div><div><small>บันทึกทั้งหมด</small><strong id="statTotal">—</strong></div></div></div>
+ <div class="dashboard-charts">
+  <section class="panel chart-panel"><div class="panelhead"><div><h3>ข้อมูลที่บันทึกในแต่ละเครื่องมือ</h3><p class="chart-subtitle">จำนวนรายการจากฐานข้อมูลที่เชื่อมต่อ · แสดงข้อมูลจริงเท่านั้น</p></div><span class="tag">9 เครื่องมือ</span></div><div class="chart-scroller"><div id="moduleProgress" class="chart-empty">เข้าสู่ระบบเพื่อดูกราฟจากข้อมูลจริง</div></div></section>
+  <section class="panel chart-panel"><div class="panelhead"><div><h3>สัดส่วนข้อมูลชุมชน</h3><p class="chart-subtitle">จำแนกตามเครื่องมือทั้ง 9 รายการ</p></div></div><div class="donut-layout"><div class="donut-wrap"><div id="moduleDonut" class="donut-chart"><div class="donut-hole"><strong id="donutTotal">—</strong><small>รายการ</small></div></div></div><div id="moduleLegend" class="donut-legend"><span class="muted">เข้าสู่ระบบเพื่อดูสัดส่วน</span></div></div></section>
+ </div>
  <div class="sectionhead"><div><h2>เครื่องมือศึกษาชุมชนและแบบสำรวจ</h2><p>เลือกเครื่องมือเพื่อเข้าสู่พื้นที่ทำงาน · ต้อง Login เพื่อดูรายชื่อและจัดการข้อมูล</p></div><span class="tag">7 TOOLS + 2 SURVEYS</span></div>
  <div class="toolgrid">
- <div class="toolcard" onclick="go('map')"><div class="tooltop"><div class="toolicon">⌖</div><span class="tag">GIS MAP</span></div><h3>1. แผนที่เดินดิน</h3><p>พิกัดครัวเรือน ภาพถ่ายดาวเทียม โรคและภาวะสุขภาพหลายรายการ</p><div class="progress"><i style="width:90%"></i></div></div>
- <div class="toolcard" onclick="go('genogram')"><div class="tooltop"><div class="toolicon">♧</div><span class="tag">FAMILY</span></div><h3>2. ผังเครือญาติ</h3><p>สมาชิกครอบครัว รุ่น ความสัมพันธ์ และสัญลักษณ์สุขภาพ</p><div class="progress"><i style="width:75%"></i></div></div>
- <div class="toolcard" onclick="go('organization')"><div class="tooltop"><div class="toolicon">⌘</div><span class="tag">STRUCTURE</span></div><h3>3. โครงสร้างองค์กรชุมชน</h3><p>ผู้นำ กลุ่มองค์กร บทบาทและเครือข่ายความร่วมมือ</p><div class="progress"><i style="width:65%"></i></div></div>
- <div class="toolcard" onclick="go('resources')"><div class="tooltop"><div class="toolicon">✣</div><span class="tag">RESOURCES</span></div><h3>4. ระบบสุขภาพชุมชน</h3><p>อาหาร ความเชื่อ สถานบริการ ยาและสมุนไพร</p><div class="progress"><i style="width:70%"></i></div></div>
- <div class="toolcard" onclick="go('calendar')"><div class="tooltop"><div class="toolicon">▦</div><span class="tag">CALENDAR</span></div><h3>5. ปฏิทินชุมชน</h3><p>กิจกรรม วิถีชีวิต อาชีพและฤดูกาลตลอดทั้งปี</p><div class="progress"><i style="width:60%"></i></div></div>
- <div class="toolcard" onclick="go('history')"><div class="tooltop"><div class="toolicon">◷</div><span class="tag">HISTORY</span></div><h3>6. ประวัติชุมชน</h3><p>เหตุการณ์สำคัญและพัฒนาการของชุมชนตามช่วงเวลา</p><div class="progress"><i style="width:55%"></i></div></div>
- <div class="toolcard" onclick="go('people')"><div class="tooltop"><div class="toolicon">♙</div><span class="tag">LIFE STORY</span></div><h3>7. ประวัติบุคคลสำคัญ</h3><p>เรื่องเล่า ประสบการณ์ ผลงาน และ Timeline ชีวิต</p><div class="progress"><i style="width:50%"></i></div></div>
- <div class="toolcard" onclick="go('survey')"><div class="tooltop"><div class="toolicon">▤</div><span class="tag">HOUSEHOLD SURVEY</span></div><h3>8. แบบสำรวจข้อมูลพื้นฐาน</h3><p>ข้อมูลครัวเรือนและสมาชิกหลายคน พร้อมข้อมูลประชากรและสุขภาพ</p><div class="progress"><i style="width:50%"></i></div></div>
- <div class="toolcard" onclick="go('healthSurvey')"><div class="tooltop"><div class="toolicon">✚</div><span class="tag">HEALTH SURVEY</span></div><h3>9. แบบสำรวจสุขภาพครัวเรือนและรายบุคคล</h3><p>สภาพบ้าน สุขภาพสมาชิก พฤติกรรมสุขภาพ และการเข้าถึงบริการ</p><div class="progress"><i style="width:50%"></i></div></div>
+ <div class="toolcard" role="button" tabindex="0" onclick="go('map')"><div class="tooltop"><div class="toolicon" aria-hidden="true">🗺️</div><span class="tag">GIS MAP</span></div><h3>1. แผนที่เดินดิน</h3><p>พิกัดครัวเรือน ภาพถ่ายดาวเทียม โรคและภาวะสุขภาพหลายรายการ</p><div class="tool-open">เปิดเครื่องมือ <span>→</span></div></div>
+ <div class="toolcard" role="button" tabindex="0" onclick="go('genogram')"><div class="tooltop"><div class="toolicon" aria-hidden="true">👪</div><span class="tag">FAMILY</span></div><h3>2. ผังเครือญาติ</h3><p>สมาชิกครอบครัว รุ่น ความสัมพันธ์ และสัญลักษณ์สุขภาพ</p><div class="tool-open">เปิดเครื่องมือ <span>→</span></div></div>
+ <div class="toolcard" role="button" tabindex="0" onclick="go('organization')"><div class="tooltop"><div class="toolicon" aria-hidden="true">🏘️</div><span class="tag">STRUCTURE</span></div><h3>3. โครงสร้างองค์กรชุมชน</h3><p>ผู้นำ กลุ่มองค์กร บทบาทและเครือข่ายความร่วมมือ</p><div class="tool-open">เปิดเครื่องมือ <span>→</span></div></div>
+ <div class="toolcard" role="button" tabindex="0" onclick="go('resources')"><div class="tooltop"><div class="toolicon" aria-hidden="true">🌿</div><span class="tag">RESOURCES</span></div><h3>4. ระบบสุขภาพชุมชน</h3><p>อาหาร ความเชื่อ สถานบริการ ยาและสมุนไพร</p><div class="tool-open">เปิดเครื่องมือ <span>→</span></div></div>
+ <div class="toolcard" role="button" tabindex="0" onclick="go('calendar')"><div class="tooltop"><div class="toolicon" aria-hidden="true">📅</div><span class="tag">CALENDAR</span></div><h3>5. ปฏิทินชุมชน</h3><p>กิจกรรม วิถีชีวิต อาชีพและฤดูกาลตลอดทั้งปี</p><div class="tool-open">เปิดเครื่องมือ <span>→</span></div></div>
+ <div class="toolcard" role="button" tabindex="0" onclick="go('history')"><div class="tooltop"><div class="toolicon" aria-hidden="true">🏛️</div><span class="tag">HISTORY</span></div><h3>6. ประวัติชุมชน</h3><p>เหตุการณ์สำคัญและพัฒนาการของชุมชนตามช่วงเวลา</p><div class="tool-open">เปิดเครื่องมือ <span>→</span></div></div>
+ <div class="toolcard" role="button" tabindex="0" onclick="go('people')"><div class="tooltop"><div class="toolicon" aria-hidden="true">🌟</div><span class="tag">LIFE STORY</span></div><h3>7. ประวัติบุคคลสำคัญ</h3><p>เรื่องเล่า ประสบการณ์ ผลงาน และ Timeline ชีวิต</p><div class="tool-open">เปิดเครื่องมือ <span>→</span></div></div>
+ <div class="toolcard" role="button" tabindex="0" onclick="go('survey')"><div class="tooltop"><div class="toolicon" aria-hidden="true">📝</div><span class="tag">HOUSEHOLD SURVEY</span></div><h3>8. แบบสำรวจข้อมูลพื้นฐาน</h3><p>ข้อมูลครัวเรือนและสมาชิกหลายคน พร้อมข้อมูลประชากรและสุขภาพ</p><div class="tool-open">เปิดเครื่องมือ <span>→</span></div></div>
+ <div class="toolcard" role="button" tabindex="0" onclick="go('healthSurvey')"><div class="tooltop"><div class="toolicon" aria-hidden="true">🩺</div><span class="tag">HEALTH SURVEY</span></div><h3>9. แบบสำรวจสุขภาพครัวเรือนและรายบุคคล</h3><p>สภาพบ้าน สุขภาพสมาชิก พฤติกรรมสุขภาพ และการเข้าถึงบริการ</p><div class="tool-open">เปิดเครื่องมือ <span>→</span></div></div>
  </div>
- <div class="grid2"><div class="panel"><div class="panelhead"><h3>ความคืบหน้าการเก็บข้อมูล</h3><span class="muted">สถานะจากข้อมูลจริง</span></div><div id="moduleProgress" class="activity"><div class="empty">เข้าสู่ระบบเพื่อโหลดข้อมูลจาก Google Sheets</div></div></div><div class="panel"><div class="panelhead"><h3>กิจกรรมล่าสุด</h3><span class="muted">Recent records</span></div><div id="recentActivity" class="activity"><div class="empty">ยังไม่มีข้อมูลกิจกรรม</div></div></div></div>
+ <div class="panel dashboard-activity"><div class="panelhead"><h3>กิจกรรมล่าสุด</h3><span class="muted">Recent records</span></div><div id="recentActivity" class="activity"><div class="empty">เข้าสู่ระบบเพื่อโหลดกิจกรรมจาก Google Sheets</div></div></div>
 </section>
 <section class="page" id="page-map"><div class="sectionhead"><div><h2>แผนที่เดินดิน</h2><p>ตำบลเก่างิ้ว อำเภอพล จังหวัดขอนแก่น · ปักหมุดครัวเรือนบนภาพถ่ายดาวเทียม</p></div><div class="toolbar"><button class="btn outline" onclick="printModuleRecords('map')">พิมพ์แบบสำรวจ</button><button class="btn" onclick="requireLogin(openMapRecord)">＋ เพิ่มครัวเรือน</button></div></div><div class="notice">แผนที่เริ่มต้นที่ตำบลเก่างิ้ว อำเภอพล จังหวัดขอนแก่น โปรดตรวจตำแหน่งจริงก่อนบันทึกพิกัด ห้ามบันทึกชื่อ-นามสกุลหรือข้อมูลสุขภาพที่ระบุตัวบุคคลได้ หากยังไม่มีมาตรการคุ้มครองข้อมูลและสิทธิ์เข้าถึงที่เหมาะสม</div><div class="toolbar"><select id="villageFilter" onchange="loadModule('map')"><option value="">ทุกหมู่บ้าน</option><option>2</option><option>10</option></select><input id="searchMap" placeholder="ค้นหารหัสบ้าน / ที่อยู่" oninput="filterMapLocal()"><button class="btn outline sm" onclick="startMapPin()">⌖ ปักหมุดจากแผนที่</button><button class="btn outline sm" onclick="loadModule('map')">รีเฟรช</button></div><div class="map-legend"><span><b class="diabetes">*</b> เบาหวาน</span><span><b class="hypertension">▲</b> ความดันโลหิตสูง</span><span><b class="heart">♥</b> โรคหัวใจ</span><span><b class="kidney">◆</b> โรคไต</span><span><b class="cancer">★</b> มะเร็ง</span><span><b class="other">●</b> โรค/ภาวะอื่น</span></div><div class="maplayout" id="mapLayout"><div class="panel" id="mapPanel"><button class="btn outline sm map-expand-btn" id="mapExpandBtn" onclick="toggleMapExpand()" aria-expanded="false">⛶ ขยายแผนที่</button><div id="map"></div></div><div class="panel"><div class="panelhead"><h3>รายการครัวเรือน</h3><span class="muted" id="mapCount">0 รายการ</span></div><div class="listbox" id="mapList"><div class="loginhint"><div class="lock">🔒</div>เข้าสู่ระบบเพื่อดูรายชื่อครัวเรือน</div></div></div></div></section>
 <section class="page" id="page-genogram"><div class="sectionhead"><div><h2>ผังเครือญาติ</h2><p>เชื่อมสมาชิกด้วยเส้นคู่สมรส เส้นพ่อแม่-ลูก และพี่น้องจากพ่อแม่ร่วมกัน</p></div><div class="toolbar"><button class="btn outline" onclick="printModuleRecords('genogram')">พิมพ์แบบสำรวจ</button><button class="btn outline" onclick="requireLogin(openGenogramHouseholdRecord)">＋ เพิ่มครัวเรือน</button><button class="btn" onclick="requireLogin(()=>openRecord('genogram'))">＋ เพิ่มสมาชิก</button></div></div><div class="notice">สร้างและบันทึกครัวเรือนได้ต่อเนื่อง จากนั้นเลือกครัวเรือนก่อนเพิ่มสมาชิกเพื่อแยกผังของแต่ละครอบครัว สมาชิกที่มีพ่อแม่ร่วมกันจะแสดงเป็นพี่น้อง และสามารถทำสัญลักษณ์บุคคลหลักเป็นสีทึบได้</div><div class="toolbar"><label for="genHouseholdFilter">แสดงผังครัวเรือน</label><select id="genHouseholdFilter" onchange="renderModule('genogram')"><option value="">ทุกครัวเรือน</option></select></div><div class="gen-legend panel" aria-label="คำอธิบายสัญลักษณ์ผังเครือญาติ"><span><b>□</b> ชาย</span><span><b>○</b> หญิง</span><span><b>■ ●</b> บุคคลหลัก</span><span><b>═</b> คู่สมรส</span><span><b>=/</b> หย่าร้าง</span><span><b>│</b> เส้นลงสู่บุตร/พี่น้อง</span><span><b>†</b> เสียชีวิต</span><span><b>⚕</b> โรคเรื้อรัง</span><span><b>✚</b> เจ็บป่วย</span><span><b>!</b> ต้องติดตาม</span></div><div class="panel"><div class="panelhead"><h3>ผังเครือญาติ</h3><span class="muted" id="genCount">0 คน</span></div><div id="genList" class="empty">เข้าสู่ระบบเพื่อดูรายชื่อสมาชิก</div></div></section>
@@ -123,7 +1620,7 @@ body,body *{font-family:'TH Sarabun New','Sarabun',sans-serif!important}
 <section class="page" id="page-history"><div class="sectionhead"><div><h2>ประวัติชุมชน</h2><p>เหตุการณ์สำคัญตามช่วงเวลา</p></div><div class="toolbar"><button class="btn outline" onclick="printModuleRecords('history')">พิมพ์แบบสำรวจ</button><button class="btn" onclick="requireLogin(()=>openRecord('history'))">＋ เพิ่มเหตุการณ์</button></div></div><div class="panel"><div id="historyList" class="empty">เข้าสู่ระบบเพื่อดูข้อมูล</div></div></section>
 <section class="page" id="page-people"><div class="sectionhead"><div><h2>ประวัติบุคคลสำคัญ</h2><p>ประวัติชีวิต บทบาท ผลงาน และ Timeline</p></div><div class="toolbar"><button class="btn outline" onclick="printModuleRecords('people')">พิมพ์แบบสำรวจ</button><button class="btn" onclick="requireLogin(()=>openRecord('people'))">＋ เพิ่มบุคคลสำคัญ</button></div></div><div class="panel"><div id="peopleList" class="empty">เข้าสู่ระบบเพื่อดูข้อมูล</div></div></section>
 <section class="page" id="page-survey"><div class="sectionhead"><div><h2>แบบสำรวจข้อมูลพื้นฐาน</h2><p>หนึ่งรายการต่อครัวเรือน เพิ่มสมาชิกในครัวเรือนได้หลายคน</p></div><div class="toolbar"><button class="btn outline" onclick="printModuleRecords('survey')">พิมพ์แบบสำรวจ</button><button class="btn" onclick="requireLogin(()=>openRecord('survey'))">＋ เพิ่มครัวเรือนสำรวจ</button></div></div><div class="notice">แบบสำรวจนี้มีข้อมูลส่วนบุคคลและข้อมูลสุขภาพ รวมถึงเลขประจำตัวประชาชน ควรเก็บเท่าที่จำเป็น แจ้งวัตถุประสงค์และขอความยินยอมก่อนบันทึก จำกัดสิทธิ์ผู้เข้าถึง และปฏิบัติตามนโยบายคุ้มครองข้อมูลของหน่วยงาน</div><div class="panel"><div class="panelhead"><h3>ครัวเรือนที่สำรวจ</h3><span class="muted" id="surveyCount">0 ครัวเรือน</span></div><div id="surveyList" class="empty">เข้าสู่ระบบเพื่อดูข้อมูล</div></div></section>
-<section class="page" id="page-healthSurvey"><div class="sectionhead"><div><h2>แบบสำรวจข้อมูลสุขภาพครัวเรือนและรายบุคคล</h2><p>แบบสำรวจข้อที่ 9 · ข้อมูลครัวเรือน สิ่งแวดล้อม สุขภาพสมาชิก และการเข้าถึงบริการ</p></div><div class="toolbar"><button class="btn outline" onclick="printModuleRecords('healthSurvey')">พิมพ์แบบสำรวจ</button><button class="btn outline" onclick="printBlankHealthSurvey()">พิมพ์แบบสำรวจเปล่า</button><button class="btn" onclick="requireLogin(()=>openRecord('healthSurvey'))">＋ เพิ่มแบบสำรวจ</button></div></div><div class="notice">แบบสำรวจนี้มีข้อมูลสุขภาพที่อ่อนไหว ควรใช้รหัสแทนชื่อสมาชิก เก็บเฉพาะข้อมูลที่จำเป็น แจ้งวัตถุประสงค์และขอความยินยอมก่อนบันทึก จำกัดสิทธิ์ผู้เข้าถึง และปฏิบัติตามนโยบายคุ้มครองข้อมูลของหน่วยงาน</div><div class="panel"><div class="panelhead"><h3>รายการแบบสำรวจสุขภาพครัวเรือน</h3><span class="muted" id="healthSurveyCount">0 ครัวเรือน</span></div><div id="healthSurveyList" class="empty">เข้าสู่ระบบเพื่อดูข้อมูล</div></div></section>
+<section class="page" id="page-healthSurvey"><div class="sectionhead"><div><h2>แบบสำรวจข้อมูลสุขภาพครัวเรือนและรายบุคคล</h2><p>แบบสำรวจข้อที่ 9 · ข้อมูลครัวเรือน สิ่งแวดล้อม สุขภาพสมาชิก และการเข้าถึงบริการ</p></div><div class="toolbar"><button class="btn outline" onclick="printModuleRecords('healthSurvey')">พิมพ์แบบสำรวจ</button><button class="btn" onclick="requireLogin(()=>openRecord('healthSurvey'))">＋ เพิ่มแบบสำรวจ</button></div></div><div class="notice">แบบสำรวจนี้มีข้อมูลสุขภาพที่อ่อนไหว ควรใช้รหัสแทนชื่อสมาชิก เก็บเฉพาะข้อมูลที่จำเป็น แจ้งวัตถุประสงค์และขอความยินยอมก่อนบันทึก จำกัดสิทธิ์ผู้เข้าถึง และปฏิบัติตามนโยบายคุ้มครองข้อมูลของหน่วยงาน</div><div class="panel"><div class="panelhead"><h3>รายการแบบสำรวจสุขภาพครัวเรือน</h3><span class="muted" id="healthSurveyCount">0 ครัวเรือน</span></div><div id="healthSurveyList" class="empty">เข้าสู่ระบบเพื่อดูข้อมูล</div></div></section>
 </div></main></div>
 <div class="modalback" id="authModal"><div class="modal loginmodal"><div class="brandmark">✚</div><h2>ยินดีต้อนรับกลับ</h2><p>เข้าสู่ระบบเพื่อดูรายชื่อและจัดการข้อมูลชุมชน</p><input id="loginUser" autocomplete="username" placeholder="Username"><input id="loginPass" type="password" autocomplete="current-password" placeholder="Password" onkeydown="if(event.key==='Enter')login()"><button class="btn" style="width:100%;padding:12px" onclick="login()">เข้าสู่ระบบ</button><div class="muted" style="margin-top:13px">ขอข้อมูลเข้าสู่ระบบจากผู้ดูแลระบบ</div><button class="btn outline sm" style="margin-top:12px" onclick="closeModal('authModal')">กลับหน้า Dashboard</button></div></div>
 <div class="modalback" id="recordModal"><div class="modal"><h3 id="recordTitle">เพิ่มข้อมูล</h3><form id="recordForm"><div id="recordFields" class="formgrid"></div><div class="modalactions"><button type="button" class="btn outline" onclick="cancelRecord()">ยกเลิก</button><button class="btn" type="submit" name="saveAction" value="save">บันทึกข้อมูล</button><button class="btn outline" type="submit" name="saveAction" value="addHousehold" id="saveAndAddHousehold" hidden>บันทึกและเพิ่มครัวเรือนต่อ</button></div></form></div></div>
@@ -131,7 +1628,7 @@ body,body *{font-family:'TH Sarabun New','Sarabun',sans-serif!important}
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 const GAS_URL = "https://script.google.com/macros/s/AKfycbwfuOVU3SB4xXrg4wKvjzdoRAK0Kms1IHKIdgEz7Aiw4h1ICu-_P4dBtd_eKd7swCoXmQ/exec";
-const MAP_CENTER=[15.8523721,102.59292],MAP_ZOOM=14;
+const MAP_CENTER=[15.8523721,102.59292],MAP_ZOOM=25;
 const $=s=>document.querySelector(s);let token=sessionStorage.getItem('chi_token')||'',currentUser=sessionStorage.getItem('chi_user')||'',activeModule='dashboard',mapObj=null,mapMarkers=[],cache={};
 const moduleNames={map:'แผนที่เดินดิน',genogram:'ผังเครือญาติ',organization:'โครงสร้างองค์กรชุมชน',resources:'ระบบสุขภาพชุมชน',calendar:'ปฏิทินชุมชน',history:'ประวัติชุมชน',people:'ประวัติบุคคลสำคัญ',survey:'แบบสำรวจข้อมูลพื้นฐาน',healthSurvey:'แบบสำรวจสุขภาพครัวเรือน'};
 function toast(s){let t=$('#toast');t.textContent=s;t.style.display='block';setTimeout(()=>t.style.display='none',2800)}
@@ -139,13 +1636,29 @@ function closeModal(id){$('#'+id).classList.remove('show')}
 function cancelRecord(){genogramHouseholdReturn=false;closeModal('recordModal')}
 function openAuth(){if(token){logout();return}$('#authModal').classList.add('show')}
 function authUI(){ $('#authBtn').textContent=token?'ออกจากระบบ':'เข้าสู่ระบบ';$('#userAvatar').textContent=token?(currentUser||'A').slice(0,1).toUpperCase():'?';}
-function logout(){token='';currentUser='';sessionStorage.removeItem('chi_token');sessionStorage.removeItem('chi_user');authUI();Object.keys(cache).forEach(k=>delete cache[k]);['mapList','genList','orgList','resourcesList','calendarList','historyList','peopleList','surveyList','healthSurveyList'].forEach(id=>{let e=$('#'+id);if(e)e.innerHTML='<div class="loginhint"><div class="lock">🔒</div>เข้าสู่ระบบเพื่อดูข้อมูล</div>'});toast('ออกจากระบบแล้ว');}
-async function api(action,data={}){if(!GAS_URL||GAS_URL.includes('PASTE_YOUR'))throw Error('กรุณาใส่ URL ของ Google Apps Script ในตัวแปร GAS_URL ก่อน');let r=await fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,token,...data})});let j=await r.json();if(!j.ok)throw Error(j.message||'เกิดข้อผิดพลาด');return j}
+function logout(){token='';currentUser='';sessionStorage.removeItem('chi_token');sessionStorage.removeItem('chi_user');authUI();Object.keys(cache).forEach(k=>delete cache[k]);['mapList','genList','orgList','resourcesList','calendarList','historyList','peopleList','surveyList','healthSurveyList'].forEach(id=>{let e=$('#'+id);if(e)e.innerHTML='<div class="loginhint"><div class="lock">🔒</div>เข้าสู่ระบบเพื่อดูข้อมูล</div>'});['statHouse','statPeople','statResource','statTotal'].forEach(id=>$('#'+id).textContent='—');$('#moduleProgress').textContent='เข้าสู่ระบบเพื่อดูกราฟจากข้อมูลจริง';$('#moduleDonut').style.background='#edf1f5';$('#donutTotal').textContent='—';$('#moduleLegend').innerHTML='<span class="muted">เข้าสู่ระบบเพื่อดูสัดส่วน</span>';$('#recentActivity').innerHTML='<div class="empty">เข้าสู่ระบบเพื่อโหลดกิจกรรมจาก Google Sheets</div>';$('#connStatus').textContent='● ยังไม่เชื่อมต่อฐานข้อมูล';toast('ออกจากระบบแล้ว');}
+async function api(action,data={}){let payload={action,token,...data},j;if(typeof google!=='undefined'&&google.script&&google.script.run){j=await new Promise((resolve,reject)=>google.script.run.withSuccessHandler(resolve).withFailureHandler(error=>reject(new Error(error&&error.message?error.message:'เชื่อมต่อ Google Apps Script ไม่สำเร็จ'))).apiCall(payload))}else{if(!GAS_URL||GAS_URL.includes('PASTE_YOUR'))throw Error('กรุณาตั้งค่า URL ของ Google Apps Script Web App ก่อน');let response=await fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});if(!response.ok)throw Error(`เชื่อมต่อระบบไม่สำเร็จ (HTTP ${response.status})`);j=await response.json()}if(!j||!j.ok)throw Error(j&&j.message?j.message:'เกิดข้อผิดพลาดจากระบบ');return j}
 async function login(){let username=$('#loginUser').value.trim(),password=$('#loginPass').value;if(!username||!password){toast('กรุณากรอกชื่อผู้ใช้และรหัสผ่าน');return}try{let j=await api('login',{username,password});token=j.token;currentUser=j.username;sessionStorage.setItem('chi_token',token);sessionStorage.setItem('chi_user',currentUser);authUI();closeModal('authModal');toast('เข้าสู่ระบบสำเร็จ');await refreshDashboard();if(activeModule!=='dashboard')loadModule(activeModule)}catch(e){toast(e.message)}}
 function requireLogin(fn){if(!token){openAuth();toast('กรุณาเข้าสู่ระบบก่อนดูรายชื่อ');return}fn()}
 function go(page){activeModule=page;document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));$('#page-'+page).classList.add('active');document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));$('#crumb').innerHTML=(page==='dashboard'?'ภาพรวม Dashboard':moduleNames[page])+'<small>Community assessment · 7 tools + 2 surveys</small>';$('#sidebar').classList.remove('open');if(page==='map'){initMap();if(mapObj)setTimeout(()=>mapObj.invalidateSize(),150)}if(page!=='dashboard'&&token)loadModule(page)}
 $('#nav').addEventListener('click',e=>{let b=e.target.closest('button[data-page]');if(b)go(b.dataset.page)});
-async function refreshDashboard(){if(!token)return;try{let j=await api('dashboard');let c=j.counts||{};$('#statHouse').textContent=c.map||0;$('#statPeople').textContent=c.genogram||0;$('#statResource').textContent=c.resources||0;$('#statTotal').textContent=j.total||0;$('#connStatus').textContent='● Google Sheets เชื่อมต่อแล้ว';$('#moduleProgress').innerHTML=Object.keys(moduleNames).map(k=>`<div class="activityrow"><span class="dot"></span><span>${moduleNames[k]}</span><b style="margin-left:auto">${c[k]||0}</b><span class="muted">รายการ</span></div>`).join('');$('#recentActivity').innerHTML=(j.recent||[]).map(r=>`<div class="activityrow"><span class="dot"></span><span>${esc(r.title||r.module)}</span><time>${esc(r.updatedAt||'')}</time></div>`).join('')||'<div class="empty">ยังไม่มีรายการ</div>'}catch(e){$('#connStatus').textContent='● เชื่อมต่อ Google Sheets ไม่สำเร็จ';toast(e.message)}}
+$('.toolgrid').addEventListener('keydown',e=>{let card=e.target.closest('.toolcard');if(card&&(e.key==='Enter'||e.key===' ')){e.preventDefault();card.click()}});
+function renderDashboardCharts(counts){
+ const keys=Object.keys(moduleNames),colors=['#f36f7b','#24b7c5','#6a76ef','#31b597','#f2a64a','#9a78df','#4da7d9','#e48665','#58b9a2'];
+ const labels=['แผนที่','เครือญาติ','องค์กร','ระบบสุขภาพ','ปฏิทิน','ประวัติชุมชน','บุคคล','พื้นฐาน','สุขภาพ'];
+ const values=keys.map(key=>Math.max(0,Number(counts[key])||0)),total=values.reduce((sum,value)=>sum+value,0),max=Math.max(0,...values);
+ const width=760,height=250,left=46,right=16,top=24,bottom=48,plotWidth=width-left-right,plotHeight=height-top-bottom,scale=max||1,band=plotWidth/keys.length,barWidth=30;
+ const ticks=Array.from(new Set([0,Math.round(max/2),max])).sort((a,b)=>a-b);
+ const grid=ticks.map(value=>{const y=top+plotHeight-(value/scale)*plotHeight;return `<line class="chart-grid" x1="${left}" y1="${y}" x2="${width-right}" y2="${y}"></line><text class="chart-axis-label" x="${left-9}" y="${y+4}" text-anchor="end">${value.toLocaleString('th-TH')}</text>`}).join('');
+ const bars=keys.map((key,index)=>{const value=values[index],barHeight=value?Math.max(3,(value/scale)*plotHeight):0,x=left+band*index+(band-barWidth)/2,y=top+plotHeight-barHeight;return `<g><title>${esc(moduleNames[key])}: ${value.toLocaleString('th-TH')} รายการ</title><rect class="chart-bar" x="${x}" y="${y}" width="${barWidth}" height="${barHeight}" rx="5" fill="${colors[index]}"></rect>${value?`<text class="chart-value-label" x="${x+barWidth/2}" y="${y-6}" text-anchor="middle">${value.toLocaleString('th-TH')}</text>`:''}<text class="chart-category-label" x="${left+band*(index+.5)}" y="${height-17}" text-anchor="middle">${labels[index]}</text></g>`}).join('');
+ $('#moduleProgress').innerHTML=`<svg class="module-chart" viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="moduleChartTitle"><title id="moduleChartTitle">จำนวนรายการจากฐานข้อมูล แยกตามเครื่องมือชุมชน</title>${grid}${bars}</svg>`;
+ $('#donutTotal').textContent=total.toLocaleString('th-TH');
+ let angle=0;const segments=keys.map((key,index)=>{const value=values[index];if(!value)return '';const start=angle;angle+=value/total*360;return `${colors[index]} ${start.toFixed(2)}deg ${angle.toFixed(2)}deg`}).filter(Boolean);
+ $('#moduleDonut').style.background=segments.length?`conic-gradient(${segments.join(',')})`:'#edf1f5';
+ $('#moduleDonut').setAttribute('role','img');$('#moduleDonut').setAttribute('aria-label',`แผนภูมิวงแหวน สัดส่วนข้อมูล ${total.toLocaleString('th-TH')} รายการ จาก 9 เครื่องมือ`);
+ $('#moduleLegend').innerHTML=keys.map((key,index)=>`<div class="legend-item"><span class="legend-dot" style="background:${colors[index]}"></span><span>${esc(moduleNames[key])}</span><b>${values[index].toLocaleString('th-TH')}</b></div>`).join('');
+}
+async function refreshDashboard(){if(!token)return;try{let j=await api('dashboard');let c=j.counts||{};$('#statHouse').textContent=c.map||0;$('#statPeople').textContent=c.genogram||0;$('#statResource').textContent=c.resources||0;$('#statTotal').textContent=j.total||0;$('#connStatus').textContent='● Google Sheets เชื่อมต่อแล้ว';renderDashboardCharts(c);$('#recentActivity').innerHTML=(j.recent||[]).map(r=>{let module=Object.prototype.hasOwnProperty.call(moduleNames,r.module)?r.module:'other';return `<div class="activityrow"><span class="dot activity-dot activity-dot-${module}" title="${esc(moduleNames[r.module]||'กิจกรรมชุมชน')}" aria-hidden="true"></span><span>${esc(r.title||moduleNames[r.module]||'กิจกรรมชุมชน')}</span><time>${esc(r.updatedAt||'')}</time></div>`}).join('')||'<div class="empty">ยังไม่มีรายการ</div>'}catch(e){$('#connStatus').textContent='● เชื่อมต่อ Google Sheets ไม่สำเร็จ';toast(e.message)}}
 async function loadModule(module){if(!token)return;try{if(module==='genogram'){let [members,households]=await Promise.all([api('list',{module}),api('list',{module:'map'})]);cache.genogram=members.records||[];cache.map=households.records||[];syncGenogramHouseholds();renderModule(module);return}let request={module};if(module==='map')request.village=$('#villageFilter')?.value||'';let j=await api('list',request);cache[module]=j.records||[];renderModule(module)}catch(e){toast(e.message)}}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function renderModule(m){let a=cache[m]||[];if(m==='map'){renderMap(a);return}if(m==='survey'){renderSurvey(a);return}if(m==='healthSurvey'){renderHealthSurvey(a);return}if(m==='genogram'){let household=$('#genHouseholdFilter').value;if(household==='unassigned')a=a.filter(person=>!person.householdId||!(cache.map||[]).some(record=>String(record.id)===String(person.householdId)));else if(household)a=a.filter(person=>String(person.householdId||'')===household);renderGenogram(a);return}if(m==='organization'){$('#orgCount').textContent=a.length+' รายการ';$('#orgList').innerHTML=a.length?table(a,['ชื่อ/องค์กร','ประเภท','บทบาท','หมู่บ้าน','รายละเอียด'],r=>[r.title,r.type,r.role,r.village,r.detail]):'<div class="empty">ยังไม่มีข้อมูล</div>';renderOrganizationChart(a);return}renderTable(m)}
@@ -337,7 +1850,7 @@ function renderHealthSurveyFields(existing={}){
   {title:'4. สุขภาพแม่และเด็ก',content:section('สุขภาพแม่และเด็ก',healthSurveyMaternalFields,'maternal')},
   {title:'5. การเข้าถึงบริการสุขภาพและข้อเสนอแนะ',content:section('การเข้าถึงบริการสุขภาพและข้อเสนอแนะ',healthSurveyAccessFields,'access')}
  ];
- const progress=steps.map((step,index)=>`<button type="button" data-health-step-button="${index+1}" onclick="goHealthSurveyStep(${index+1})">${esc(step.title)}</button>`).join('');
+ const progress=steps.map((step,index)=>`<button type="button" data-health-step-button="${index+1}" aria-label="ขั้นที่ ${index+1}: ${esc(step.title.replace(/^\d+\.\s*/,''))}" onclick="goHealthSurveyStep(${index+1})"><span class="health-step-icon" aria-hidden="true">${['🏠','👪','🌿','👶','🏥'][index]}</span><span class="health-step-label"><b>ขั้นที่ ${index+1}</b>${esc(step.title.replace(/^\d+\.\s*/,''))}</span></button>`).join('');
  const panels=steps.map((step,index)=>`<section class="health-survey-step" data-health-step="${index+1}" ${index?'hidden':''}><h4 class="health-survey-step-title">${esc(step.title)}</h4>${step.content}<div class="health-survey-step-actions">${index?'<button type="button" class="btn outline" onclick="goHealthSurveyStep('+index+')">← ย้อนกลับ</button>':'<span></span>'}${index<steps.length-1?'<button type="button" class="btn" onclick="nextHealthSurveyStep()">ถัดไป →</button>':'<button type="button" class="btn outline right" onclick="goHealthSurveyStep('+index+')">← ย้อนกลับ</button>'}</div></section>`).join('');
  return `<div class="health-survey-progress" aria-label="ขั้นตอนแบบสำรวจ">${progress}</div>${panels}`;
 }
@@ -571,9 +2084,9 @@ function renderMap(a){
  let filter=$('#searchMap').value.toLowerCase(),visible=a.filter(r=>!filter||JSON.stringify(r).toLowerCase().includes(filter));
  visible.forEach(record=>{if(!hasValidCoordinates(record))return;let lat=Number(record.lat),lng=Number(record.lng);
   let diseases=diseaseSymbols([record.diseases,record.diseaseOther].filter(Boolean).join(', ')),symbols=diseases.map(d=>`<i class="${d.key}" title="${esc(d.label)}">${d.symbol}</i>`).join('')||'<i class="other">⌂</i>';
-  let iconWidth=Math.max(30,diseases.length*17+10),icon=L.divIcon({className:'',html:`<span class="disease-marker">${symbols}</span>`,iconSize:[iconWidth,30],iconAnchor:[iconWidth/2,15]});
+  let icon=L.divIcon({className:'',html:`<div class="house-marker-shell" style="--house-color:#258f9e;--house-tint:#dff4ef"><span class="house-marker"><span>🏠</span></span><span class="disease-marker">${symbols}</span></div>`,iconSize:[58,56],iconAnchor:[29,53]});
   let details=diseases.map(d=>`${d.symbol} ${d.label}`).join(' · ')||'ไม่ระบุโรค/ภาวะ';
-  let marker=L.marker([lat,lng],{icon}).addTo(mapObj).bindPopup(`<b>${esc(record.title||'ครัวเรือน')}</b><br>หมู่ ${esc(record.village||'-')}<br>${esc(details)}<br><small>${esc(record.diseases||'')}</small>`);
+  let marker=L.marker([lat,lng],{icon,riseOnHover:true,riseOffset:800}).addTo(mapObj).bindTooltip(`🏠 ${esc(record.title||'ครัวเรือน')} · หมู่ ${esc(record.village||'-')}`,{direction:'top',offset:[0,-43]}).bindPopup(`<b>🏠 ${esc(record.title||'ครัวเรือน')}</b><br>หมู่ ${esc(record.village||'-')}<br>${esc(details)}<br><small>${esc(record.diseases||'')}</small>`);
   mapMarkers.push(marker);
  });
  $('#mapCount').textContent=visible.length+' ครัวเรือน';
@@ -581,11 +2094,12 @@ function renderMap(a){
 }
 function hasValidCoordinates(record){if(record.lat===''||record.lng===''||record.lat==null||record.lng==null)return false;let lat=Number(record.lat),lng=Number(record.lng);return Number.isFinite(lat)&&Number.isFinite(lng)&&lat>=-90&&lat<=90&&lng>=-180&&lng<=180}
 function filterMapLocal(){if(cache.map)renderMap(cache.map)}
-let selectingMapPin=false;
-function startMapPin(){requireLogin(()=>{selectingMapPin=true;$('#mapPanel').classList.add('pin-pending');toast('คลิกตำแหน่งบ้านบนแผนที่เพื่อบันทึกหมุด')})}
+let selectingMapPin=false,pinPreview=null;
+function stopMapPin(){selectingMapPin=false;$('#mapPanel').classList.remove('pin-pending');if(pinPreview&&mapObj)mapObj.removeLayer(pinPreview);pinPreview=null}
+function startMapPin(){requireLogin(()=>{selectingMapPin=true;$('#mapPanel').classList.add('pin-pending');if(mapObj){if(pinPreview)mapObj.removeLayer(pinPreview);pinPreview=L.marker(mapObj.getCenter(),{icon:L.divIcon({className:'',html:'<div class="house-marker-shell" style="--house-color:#f2a64a;--house-tint:#fff4e5"><span class="house-marker"><span>🏠</span></span></div>',iconSize:[58,56],iconAnchor:[29,53]}),interactive:false,opacity:.8,zIndexOffset:1000}).addTo(mapObj)}toast('เลื่อนเมาส์เพื่อดูตัวอย่างบ้าน แล้วคลิกตำแหน่งบ้านบนภาพถ่ายดาวเทียม')})}
 function toggleMapExpand(){let layout=$('#mapLayout'),expanded=layout.classList.toggle('expanded'),button=$('#mapExpandBtn');button.textContent=expanded?'✕ ย่อแผนที่':'⛶ ขยายแผนที่';button.setAttribute('aria-expanded',String(expanded));if(mapObj)requestAnimationFrame(()=>mapObj.invalidateSize())}
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&$('#mapLayout').classList.contains('expanded'))toggleMapExpand()});
-function initMap(){if(!window.L||mapObj)return;mapObj=L.map('map',{minZoom:12,maxZoom:25}).setView(MAP_CENTER,MAP_ZOOM);L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'Tiles © Esri',maxNativeZoom:19,maxZoom:25}).addTo(mapObj);L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap',maxNativeZoom:19,maxZoom:25}).addTo(mapObj);mapObj.on('click',event=>{if(!selectingMapPin)return;selectingMapPin=false;$('#mapPanel').classList.remove('pin-pending');openRecord('map',{lat:event.latlng.lat.toFixed(6),lng:event.latlng.lng.toFixed(6)})})}
+function initMap(){if(!window.L||mapObj)return;mapObj=L.map('map',{minZoom:12,maxZoom:32}).setView(MAP_CENTER,MAP_ZOOM);L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'Tiles © Esri',maxNativeZoom:19,maxZoom:32}).addTo(mapObj);L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap',maxNativeZoom:19,maxZoom:32}).addTo(mapObj);mapObj.on('mousemove',event=>{if(selectingMapPin&&pinPreview)pinPreview.setLatLng(event.latlng)});mapObj.on('click',event=>{if(!selectingMapPin)return;stopMapPin();openRecord('map',{lat:event.latlng.lat.toFixed(6),lng:event.latlng.lng.toFixed(6)})})}
 const schemas={
 map:[['title','รหัสครัวเรือน','text',1],['village','หมู่บ้าน (2 หรือ 10)','text',1],['address','บ้านเลขที่/ที่อยู่โดยย่อ','text'],['members','จำนวนสมาชิก','number'],['lat','Latitude','number'],['lng','Longitude','number'],['diseases','โรค/ภาวะสุขภาพ (คั่นด้วย , เช่น เบาหวาน, ความดันโลหิตสูง)','textarea'],['diseaseOther','โรค/ภาวะอื่น ๆ','textarea'],['detail','หมายเหตุ','textarea']],
 genogram:[['householdId','ครัวเรือน','relationship:household'],['name','รหัส/ชื่อเรียกสมาชิก (ไม่ใช้ชื่อเต็ม)','text',1],['sex','เพศ','select:ชาย,หญิง,ไม่ระบุ'],['age','อายุ','number'],['generation','รุ่น (เว้นว่างเพื่อจัดจากความสัมพันธ์)','select:รุ่นที่ 1,รุ่นที่ 2,รุ่นที่ 3,รุ่นที่ 4'],['spouseId','คู่สมรส','relationship:spouse'],['spouseStatus','สถานะความสัมพันธ์','select:สมรส,หย่าร้าง'],['fatherId','บิดา','relationship:parent'],['motherId','มารดา','relationship:parent'],['focusPerson','บุคคลหลัก (แสดงสัญลักษณ์ทึบ)','checkbox'],['healthStatus','สถานะสุขภาพ','select:ไม่มีโรคที่รายงาน,มีโรคเรื้อรัง,เจ็บป่วย/มีภาวะสุขภาพ,ต้องติดตาม/พึ่งพิง,เสียชีวิต'],['diseases','โรค/ภาวะสุขภาพ','textarea'],['detail','หมายเหตุ','textarea']],

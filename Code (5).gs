@@ -1,10 +1,9 @@
 /**
  * COMMUNITY HEALTH INTELLIGENCE - Google Apps Script API
- * 1) วางโค้ดนี้ใน Code.gs
- * 2) Run setupSystem() หนึ่งครั้ง และอนุญาตสิทธิ์
- * 3) สร้าง/เลือก Google Sheet แล้วนำ Spreadsheet ID ไปใส่ใน SHEET_ID
- * 4) Deploy > New deployment > Web app > Execute as: Me > Who has access: Anyone
- * 5) คัดลอก URL /exec ไปใส่ใน GAS_URL ของ index.html
+ * 1) วางโค้ดนี้ใน Code.gs และคง SHEET_ID เดิมเมื่อต้องการใช้ข้อมูลเดิม
+ * 2) เฉพาะระบบใหม่เท่านั้น: Run setupSystem() หนึ่งครั้งและอนุญาตสิทธิ์
+ * 3) Deploy เป็น Web app เพื่อให้หน้าเว็บเรียก API ผ่าน URL /exec
+ * 4) นำ URL /exec ไปตั้งเป็น GAS_URL ใน index.html
  *
  * setupSystem() สร้างรหัสผ่านเริ่มต้นแบบสุ่มและแสดงใน execution log
  * เปลี่ยนรหัสผ่านได้ด้วย changeAdminPassword() ซึ่งจะสร้างรหัสใหม่แบบสุ่ม
@@ -15,6 +14,9 @@ const SESSION_TTL_SECONDS = 21600; // 6 ชั่วโมง
 const MODULES = ["map","genogram","organization","resources","calendar","history","people","survey","healthSurvey"];
 const HEADERS = ["id","module","title","village","payload","createdAt","updatedAt","createdBy"];
 const DISPLAY_HEADERS = ["รหัสรายการ","โมดูล","ชื่อรายการ","หมู่บ้าน","ข้อมูลดิบ (JSON)","สร้างเมื่อ","แก้ไขเมื่อ","ผู้บันทึก"];
+const INTERNAL_START_COLUMN = 2;
+const SHEET_HEADERS = [DISPLAY_HEADERS[0],HEADERS[0]].concat(DISPLAY_HEADERS.slice(1));
+const SHEET_BASE_COLUMN_COUNT = SHEET_HEADERS.length;
 const MODULE_FIELDS = {
   map:["address","members","lat","lng","diseases","diseaseOther","detail"],
   genogram:["householdId","name","sex","age","generation","spouseId","spouseStatus","fatherId","motherId","focusPerson","healthStatus","diseases","detail"],
@@ -74,18 +76,26 @@ const FIELD_LABELS = {
   exerciseFrequency:"ความถี่การออกกำลังกาย",dailyFruitVeg:"รับประทานผัก/ผลไม้ทุกวัน",annualCheckup:"ตรวจสุขภาพประจำปี",memberHealthNotes:"หมายเหตุสุขภาพสมาชิก"
 };
 
-function doGet() {
-  return ContentService.createTextOutput(JSON.stringify({
+function doGet(e) {
+  return json_({
     ok:true,
     service:"Community Health Intelligence API",
     version:"1.0",
-    message:"API is running. Send POST JSON requests."
-  })).setMimeType(ContentService.MimeType.JSON);
+    message:"API is running."
+  });
 }
 
 function doPost(e) {
   try {
     const body = JSON.parse((e && e.postData && e.postData.contents) || "{}");
+    return json_(apiResponse_(body));
+  } catch (err) {
+    return json_({ok:false, message:String(err && err.message ? err.message : err)});
+  }
+}
+
+function apiResponse_(body) {
+  try {
     const action = String(body.action || "");
     let result;
     if (action === "login") result = login_(body.username, body.password);
@@ -101,9 +111,9 @@ function doPost(e) {
         default: throw new Error("ไม่รู้จักคำสั่ง API");
       }
     }
-    return json_({ok:true, ...result});
+    return {ok:true, ...result};
   } catch (err) {
-    return json_({ok:false, message:String(err && err.message ? err.message : err)});
+    return {ok:false, message:String(err && err.message ? err.message : err)};
   }
 }
 
@@ -199,7 +209,7 @@ function createRecord_(module, record) {
     const id = Utilities.getUuid();
     const title = String(record.title || record.name || record.householdId || "รายการใหม่").slice(0,250);
     const village = String(record.village || "");
-    sh.appendRow([id,module,title,village,JSON.stringify(record),now,now,ADMIN_USERNAME]);
+    sh.appendRow([sh.getLastRow(),id,module,title,village,JSON.stringify(record),now,now,ADMIN_USERNAME]);
     syncReadableSheet_(module);
     return {id:id, record:record};
   } finally { lock.releaseLock(); }
@@ -213,15 +223,15 @@ function updateRecord_(module, id, record) {
   try {
     const sh = getSheet_(module), values = sh.getDataRange().getValues();
     for (let i=1;i<values.length;i++) {
-      if (String(values[i][0]) === String(id)) {
-        const old = safeParse_(values[i][4]);
+      if (String(values[i][1]) === String(id)) {
+        const old = safeParse_(values[i][5]);
         const merged = Object.assign({}, old, record);
         if (module === "map") assertUniqueHouseholdCode_(sh, merged.title, id);
-        sh.getRange(i+1,3,1,6).setValues([[
+        sh.getRange(i+1,4,1,6).setValues([[
           String(merged.title || merged.name || "รายการ").slice(0,250),
           String(merged.village || ""),
           JSON.stringify(merged),
-          values[i][5],
+          values[i][6],
           new Date().toISOString(),
           ADMIN_USERNAME
         ]]);
@@ -240,8 +250,8 @@ function assertUniqueHouseholdCode_(sheet, code, excludeId) {
   if (!normalizedCode) throw new Error("กรุณาระบุรหัสครัวเรือน");
   const rows = sheet.getDataRange().getValues();
   for (let i=1;i<rows.length;i++) {
-    if (excludeId && String(rows[i][0]) === String(excludeId)) continue;
-    if (String(rows[i][2] || "").trim().toLowerCase() === normalizedCode) {
+    if (excludeId && String(rows[i][1]) === String(excludeId)) continue;
+    if (String(rows[i][3] || "").trim().toLowerCase() === normalizedCode) {
       throw new Error("รหัสครัวเรือนนี้มีอยู่แล้ว กรุณาตรวจสอบรายการเดิมก่อนบันทึก");
     }
   }
@@ -252,8 +262,9 @@ function deleteRecord_(module, id) {
   if (!id) throw new Error("ไม่พบรหัสรายการ");
   const sh = getSheet_(module), values = sh.getDataRange().getValues();
   for (let i=1;i<values.length;i++) {
-    if (String(values[i][0]) === String(id)) {
+    if (String(values[i][1]) === String(id)) {
       sh.deleteRow(i+1);
+      syncReadableSheet_(module);
       return {deleted:true};
     }
   }
@@ -263,7 +274,7 @@ function deleteRecord_(module, id) {
 function readModule_(module) {
   const sh = getSheet_(module), last = sh.getLastRow();
   if (last < 2) return [];
-  const values = sh.getRange(2,1,last-1,HEADERS.length).getValues();
+  const values = sh.getRange(2,INTERNAL_START_COLUMN,last-1,HEADERS.length).getValues();
   return values.map(function(row) {
     const obj = safeParse_(row[4]);
     obj.id = String(row[0]);
@@ -289,24 +300,39 @@ function getSheet_(module) {
     sh.getRange(1,1,1,HEADERS.length).setValues([HEADERS]);
     sh.setFrozenRows(1);
   }
+  ensureReadableSheetSchema_(sh);
   return sh;
+}
+function ensureReadableSheetSchema_(sh) {
+  const header = sh.getRange(1,1,1,INTERNAL_START_COLUMN).getValues()[0];
+  if (String(header[0]) === DISPLAY_HEADERS[0] && String(header[1]) === HEADERS[0]) return;
+  sh.insertColumnBefore(1);
+  sh.getRange(1,1).setValue(DISPLAY_HEADERS[0]);
+  sh.getRange(1,INTERNAL_START_COLUMN,1,HEADERS.length).setValues([HEADERS]);
+  const recordCount = sh.getLastRow() - 1;
+  if (recordCount > 0) {
+    sh.getRange(2,1,recordCount,1).setValues(Array.from({length:recordCount},function(_,index){return [index+1];}));
+  }
 }
 function syncReadableSheet_(module) {
   const sh = getSheet_(module);
   const lastRow = sh.getLastRow();
-  const rows = lastRow > 1 ? sh.getRange(2,1,lastRow-1,HEADERS.length).getValues() : [];
+  const rows = lastRow > 1 ? sh.getRange(2,INTERNAL_START_COLUMN,lastRow-1,HEADERS.length).getValues() : [];
   const records = rows.map(function(row){
     const record = safeParse_(row[4]);
     return record && typeof record === "object" && !Array.isArray(record) ? record : {};
   });
   const columns = readableColumns_(module, records);
-  const columnCount = HEADERS.length + columns.length;
+  const columnCount = SHEET_BASE_COLUMN_COUNT + columns.length;
   if (sh.getMaxColumns() < columnCount) sh.insertColumnsAfter(sh.getMaxColumns(), columnCount - sh.getMaxColumns());
-  sh.getRange(1,1,1,HEADERS.length).setValues([DISPLAY_HEADERS]);
+  sh.getRange(1,1,1,SHEET_BASE_COLUMN_COUNT).setValues([SHEET_HEADERS]);
+  if (records.length) {
+    sh.getRange(2,1,records.length,1).setValues(records.map(function(record,index){return [index+1];}));
+  }
   if (columns.length) {
-    sh.getRange(1,HEADERS.length+1,1,columns.length).setValues([columns.map(function(column){return column.label;})]);
+    sh.getRange(1,columnCount-columns.length+1,1,columns.length).setValues([columns.map(function(column){return column.label;})]);
     if (records.length) {
-      sh.getRange(2,HEADERS.length+1,records.length,columns.length).setValues(records.map(function(record){
+      sh.getRange(2,columnCount-columns.length+1,records.length,columns.length).setValues(records.map(function(record){
         return columns.map(function(column){return readableValue_(record,column.key);});
       }));
     }
@@ -315,16 +341,17 @@ function syncReadableSheet_(module) {
   sh.setFrozenColumns(4);
   sh.setRowHeight(1,40);
   sh.getRange(1,1,1,columnCount).setFontWeight("bold").setBackground("#dff3e7").setWrap(true);
-  sh.setColumnWidth(1,150);
-  sh.setColumnWidth(2,90);
-  sh.setColumnWidth(3,180);
-  sh.setColumnWidth(4,100);
-  sh.hideColumns(5);
-  sh.setColumnWidth(6,160);
+  sh.setColumnWidth(1,80);
+  sh.hideColumns(2);
+  sh.setColumnWidth(3,90);
+  sh.setColumnWidth(4,180);
+  sh.setColumnWidth(5,100);
+  sh.hideColumns(6);
   sh.setColumnWidth(7,160);
-  sh.setColumnWidth(8,120);
+  sh.setColumnWidth(8,160);
+  sh.setColumnWidth(9,120);
   columns.forEach(function(column,index){
-    sh.setColumnWidth(HEADERS.length+index+1,/detail|diseases|timeline/i.test(column.key)?280:150);
+    sh.setColumnWidth(columnCount-columns.length+index+1,/detail|diseases|timeline/i.test(column.key)?280:150);
   });
   const filter = sh.getFilter();
   if (filter) filter.remove();
