@@ -185,8 +185,8 @@ body {
   position: relative;
   z-index: 1;
   flex: 0 0 44px;
-  width: 44px;
-  height: 44px;
+  width: 30px;
+  height: 30px;
   background: var(--stat-tint);
   color: var(--stat-color);
 }
@@ -1202,21 +1202,21 @@ body {
   width: 44px;
   height: 44px;
   place-items: center;
-  border: 2px solid rgba(255,255,255,.98);
-  border-radius: 15px;
+  border: 1px solid rgba(255,255,255,.98);
+  border-radius: 10px;
   background: linear-gradient(145deg, #fff, var(--house-tint, #e8f7f3));
-  box-shadow: 0 4px 0 color-mix(in srgb, var(--house-color, #258f9e) 40%, #738394), 0 7px 13px rgba(22,39,57,.35), inset 0 1px 2px #fff;
+  box-shadow: 0 2px 0 color-mix(in srgb, var(--house-color, #258f9e) 40%, #738394), 0 4px 8px rgba(22,39,57,.3), inset 0 1px 2px #fff;
   font-family: "Segoe UI Emoji", "Apple Color Emoji", sans-serif;
-  font-size: 25px;
+  font-size: 17px;
   line-height: 1;
   transition: transform .15s ease, box-shadow .15s ease;
 }
 .house-marker:before {
   content: "";
   position: absolute;
-  inset: 3px;
+  inset: 2px;
   border: 1px solid color-mix(in srgb, var(--house-color, #258f9e) 27%, white);
-  border-radius: 11px;
+  border-radius: 7px;
   pointer-events: none;
 }
 .house-marker:after {
@@ -1224,10 +1224,10 @@ body {
   position: absolute;
   top: calc(100% - 1px);
   left: 50%;
-  width: 10px;
-  height: 10px;
-  border-right: 2px solid #fff;
-  border-bottom: 2px solid #fff;
+  width: 7px;
+  height: 7px;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
   background: var(--house-tint, #e8f7f3);
   box-shadow: 3px 4px 3px rgba(22,39,57,.12);
   transform: translateX(-50%) rotate(45deg);
@@ -1243,20 +1243,20 @@ body {
 .house-marker-shell {
   position: relative;
   display: grid;
-  width: 58px;
-  height: 56px;
+  width: 38px;
+  height: 36px;
   place-items: start center;
 }
 .house-marker-shell .disease-marker {
   position: absolute;
-  top: -8px;
-  right: -18px;
+  top: -3px;
+  right: -2px;
   z-index: 1;
-  min-width: 20px;
-  height: 20px;
+  min-width: 16px;
+  height: 16px;
   padding: 0 3px;
   border-width: 1px;
-  font-size: 10px;
+  font-size: 9px;
   box-shadow: 0 2px 5px rgba(21,37,52,.35);
 }
 .leaflet-marker-icon:has(.house-marker) {
@@ -1949,6 +1949,68 @@ body {
     display: none;
   }
 }
+@media (min-width: 761px) {
+  .sidebar {
+    width: 238px;
+    align-items: stretch;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 16px 12px;
+  }
+  .brand {
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 4px 8px 18px;
+  }
+  .brand > div:last-child,
+  .navlabel {
+    display: block;
+  }
+  .brand b {
+    font-size: 13px;
+  }
+  .brand small {
+    font-size: 9px;
+  }
+  .navlabel {
+    padding: 8px 11px;
+  }
+  .nav {
+    width: 100%;
+    justify-items: stretch;
+    gap: 4px;
+  }
+  .nav button {
+    justify-content: flex-start;
+    width: 100%;
+    min-height: 40px;
+    gap: 10px;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+  .sidebottom {
+    padding: 10px 4px 0;
+    font-size: 10px;
+    line-height: 1.55;
+    text-align: left;
+  }
+  .sidebottom a {
+    display: flex !important;
+    width: 100%;
+    height: auto;
+    justify-content: center;
+    margin: 9px 0 0 !important;
+    padding: 7px 8px !important;
+    font-size: 10px;
+  }
+  .sidebottom a:after {
+    display: none;
+  }
+  .main {
+    width: calc(100% - 260px);
+    margin-left: 260px;
+  }
+}
 </style>
 </head>
 <body>
@@ -2018,7 +2080,7 @@ body {
 <section class="page" id="page-history"><div class="sectionhead"><div><h2>ประวัติชุมชน</h2><p>เหตุการณ์สำคัญตามช่วงเวลา</p></div><div class="toolbar"><button class="btn outline" onclick="printModuleRecords('history')">พิมพ์แบบสำรวจ</button><button class="btn" onclick="requireLogin(()=>openRecord('history'))">＋ เพิ่มเหตุการณ์</button></div></div><div class="panel"><div id="historyList" class="empty">เข้าสู่ระบบเพื่อดูข้อมูล</div></div></section>
 <section class="page" id="page-people"><div class="sectionhead"><div><h2>ประวัติบุคคลสำคัญ</h2><p>ประวัติชีวิต บทบาท ผลงาน และ Timeline</p></div><div class="toolbar"><button class="btn outline" onclick="printModuleRecords('people')">พิมพ์แบบสำรวจ</button><button class="btn" onclick="requireLogin(()=>openRecord('people'))">＋ เพิ่มบุคคลสำคัญ</button></div></div><div class="panel"><div id="peopleList" class="empty">เข้าสู่ระบบเพื่อดูข้อมูล</div></div></section>
 <section class="page" id="page-survey"><div class="sectionhead"><div><h2>แบบสำรวจข้อมูลพื้นฐาน</h2><p>หนึ่งรายการต่อครัวเรือน เพิ่มสมาชิกในครัวเรือนได้หลายคน</p></div><div class="toolbar"><button class="btn outline" onclick="printModuleRecords('survey')">พิมพ์แบบสำรวจ</button><button class="btn" onclick="requireLogin(()=>openRecord('survey'))">＋ เพิ่มครัวเรือนสำรวจ</button></div></div><div class="notice">แบบสำรวจนี้มีข้อมูลส่วนบุคคลและข้อมูลสุขภาพ รวมถึงเลขประจำตัวประชาชน ควรเก็บเท่าที่จำเป็น แจ้งวัตถุประสงค์และขอความยินยอมก่อนบันทึก จำกัดสิทธิ์ผู้เข้าถึง และปฏิบัติตามนโยบายคุ้มครองข้อมูลของหน่วยงาน</div><div class="panel"><div class="panelhead"><h3>ครัวเรือนที่สำรวจ</h3><span class="muted" id="surveyCount">0 ครัวเรือน</span></div><div id="surveyList" class="empty">เข้าสู่ระบบเพื่อดูข้อมูล</div></div></section>
-<section class="page" id="page-healthSurvey"><div class="sectionhead"><div><h2>แบบสำรวจข้อมูลสุขภาพครัวเรือนและรายบุคคล</h2><p>แบบสำรวจข้อที่ 9 · ข้อมูลครัวเรือน สิ่งแวดล้อม สุขภาพสมาชิก และการเข้าถึงบริการ</p></div><div class="toolbar"><button class="btn outline" onclick="printModuleRecords('healthSurvey')">พิมพ์แบบสำรวจ</button><button class="btn" onclick="requireLogin(()=>openRecord('healthSurvey'))">＋ เพิ่มแบบสำรวจ</button></div></div><div class="notice">แบบสำรวจนี้มีข้อมูลสุขภาพที่อ่อนไหว ควรใช้รหัสแทนชื่อสมาชิก เก็บเฉพาะข้อมูลที่จำเป็น แจ้งวัตถุประสงค์และขอความยินยอมก่อนบันทึก จำกัดสิทธิ์ผู้เข้าถึง และปฏิบัติตามนโยบายคุ้มครองข้อมูลของหน่วยงาน</div><div class="panel"><div class="panelhead"><h3>รายการแบบสำรวจสุขภาพครัวเรือน</h3><span class="muted" id="healthSurveyCount">0 ครัวเรือน</span></div><div id="healthSurveyList" class="empty">เข้าสู่ระบบเพื่อดูข้อมูล</div></div></section>
+<section class="page" id="page-healthSurvey"><div class="sectionhead"><div><h2>แบบสำรวจข้อมูลสุขภาพครัวเรือนและรายบุคคล</h2><p>แบบสำรวจข้อที่ 9 · ข้อมูลครัวเรือน สิ่งแวดล้อม สุขภาพสมาชิก และการเข้าถึงบริการ</p></div><div class="toolbar"><button class="btn outline" onclick="printModuleRecords('healthSurvey')">พิมพ์แบบสำรวจ</button><button class="btn" onclick="requireLogin(()=>openRecord('healthSurvey'))">＋ เพิ่มแบบสำรวจ</button></div></div><div class="notice">สามารถกรอกชื่อจริงของสมาชิกและบันทึกข้อมูลแบบสำรวจลง Google Sheets ได้ ข้อมูลสุขภาพและข้อมูลส่วนบุคคลเป็นข้อมูลอ่อนไหว โปรดแจ้งวัตถุประสงค์และขอความยินยอมก่อนบันทึก จำกัดสิทธิ์ผู้เข้าถึง และปฏิบัติตามนโยบายคุ้มครองข้อมูลของหน่วยงาน</div><div class="panel"><div class="panelhead"><h3>รายการแบบสำรวจสุขภาพครัวเรือน</h3><span class="muted" id="healthSurveyCount">0 ครัวเรือน</span></div><div id="healthSurveyList" class="empty">เข้าสู่ระบบเพื่อดูข้อมูล</div></div></section>
 </div></main></div>
 <div class="modalback" id="authModal"><div class="modal loginmodal"><div class="brandmark">✚</div><h2>ยินดีต้อนรับกลับ</h2><p>เข้าสู่ระบบเพื่อดูรายชื่อและจัดการข้อมูลชุมชน</p><input id="loginUser" autocomplete="username" placeholder="Username"><input id="loginPass" type="password" autocomplete="current-password" placeholder="Password" onkeydown="if(event.key==='Enter')login()"><button class="btn" style="width:100%;padding:12px" onclick="login()">เข้าสู่ระบบ</button><div class="muted" style="margin-top:13px">ขอข้อมูลเข้าสู่ระบบจากผู้ดูแลระบบ</div><button class="btn outline sm" style="margin-top:12px" onclick="closeModal('authModal')">กลับหน้า Dashboard</button></div></div>
 <div class="modalback" id="recordModal"><div class="modal"><h3 id="recordTitle">เพิ่มข้อมูล</h3><form id="recordForm"><div id="recordFields" class="formgrid"></div><div class="modalactions"><button type="button" class="btn outline" onclick="cancelRecord()">ยกเลิก</button><button class="btn" type="submit" name="saveAction" value="save">บันทึกข้อมูล</button><button class="btn outline" type="submit" name="saveAction" value="addHousehold" id="saveAndAddHousehold" hidden>บันทึกและเพิ่มครัวเรือนต่อ</button></div></form></div></div>
@@ -2213,13 +2275,13 @@ const healthSurveyAccessFields=[
  ['mainHealthConcern','ปัญหาสุขภาพสำคัญของครัวเรือน','textarea'],['healthServiceSuggestions','ข้อเสนอแนะต่อบริการสุขภาพ','textarea']
 ];
 const healthSurveyMemberGroups=[
- ['ข้อมูลพื้นฐานของสมาชิก',[['memberCode','รหัสสมาชิก (ไม่ใช้ชื่อจริง)','text'],['sex','เพศ','select','sex'],['age','อายุ (ปี)','number'],['relationship','ความสัมพันธ์กับหัวหน้าครัวเรือน','select','relationship'],['maritalStatus','สถานภาพสมรส','select','maritalStatus'],['education','ระดับการศึกษา','select','education'],['occupation','อาชีพ','text'],['healthcare','สิทธิการรักษาพยาบาล','select','healthcare']]],
+ ['ข้อมูลพื้นฐานของสมาชิก',[['memberName','ชื่อ-นามสกุล','text'],['memberCode','รหัสสมาชิก (ถ้ามี)','text'],['sex','เพศ','select','sex'],['age','อายุ (ปี)','number'],['relationship','ความสัมพันธ์กับหัวหน้าครัวเรือน','select','relationship'],['maritalStatus','สถานภาพสมรส','select','maritalStatus'],['education','ระดับการศึกษา','select','education'],['occupation','อาชีพ','text'],['healthcare','สิทธิการรักษาพยาบาล','select','healthcare']]],
  ['ประวัติสุขภาพและการเจ็บป่วย',[['healthConditions','โรคประจำตัว (เลือกได้หลายข้อ)','multi','illnessTypes'],['healthConditionOther','โรค/ภาวะอื่น ๆ','text'],['receivingTreatment','การรักษาโรคประจำตัว','select','treatment'],['medicationUse','การใช้ยา/การรักษาต่อเนื่อง','text'],['recentIllness','การเจ็บป่วยในช่วงที่ผ่านมา','text'],['hospitalizedRecently','เข้ารับการรักษาในโรงพยาบาลหรือไม่','select','yesNo'],['disability','ความพิการ/ข้อจำกัดในการทำกิจวัตร','text'],['stressLevel','ระดับความเครียดที่ประเมินได้','select','stressLevel']]],
  ['คัดกรองโรคไม่ติดต่อเรื้อรัง (อายุ 15 ปีขึ้นไป)',[['weightKg','น้ำหนัก (กิโลกรัม)','number'],['heightCm','ส่วนสูง (เซนติเมตร)','number'],['waistCm','รอบเอว (เซนติเมตร)','number'],['diabetesScreening','ผลคัดกรองเบาหวาน','select','diabetesScreening'],['bloodGlucose','ระดับน้ำตาลในเลือด (ถ้ามี)','number'],['bloodPressureScreening','ผลคัดกรองความดันโลหิต','select','bloodPressureScreening'],['bloodPressure','ค่าความดันโลหิต (ถ้ามี)','text'],['cancerScreening','ประวัติ/ผลคัดกรองมะเร็ง','text']]],
  ['พฤติกรรมสุขภาพ (อายุ 15 ปีขึ้นไป)',[['smokingStatus','การสูบบุหรี่','select','smokingStatus'],['cigarettesPerDay','จำนวนบุหรี่ต่อวัน (ถ้าสูบ)','number'],['alcoholUse','การดื่มเครื่องดื่มแอลกอฮอล์','select','alcoholUse'],['exerciseFrequency','ความถี่การออกกำลังกาย','select','exerciseFrequency'],['dailyFruitVeg','รับประทานผัก/ผลไม้ทุกวันหรือไม่','select','yesNo'],['annualCheckup','ตรวจสุขภาพประจำปีหรือไม่','select','yesNo'],['memberHealthNotes','หมายเหตุสุขภาพสมาชิก','textarea']]]
 ];
 function healthSurveyField(field,value='',scope='household'){
- const [key,label,type,optionKey]=field,attribute=`data-health-${scope}`,required=scope==='household'&&['householdCode','householdType'].includes(key);
+ const [key,label,type,optionKey]=field,attribute=`data-health-${scope}`;
  if(type==='multi'){
   const selected=Array.isArray(value)?value:[];
   return `<fieldset class="health-choice-field full"><legend>${esc(label)}</legend><div class="health-choice-grid">${(healthSurveyOptions[optionKey]||[]).map(choice=>`<label class="health-choice"><input type="checkbox" ${attribute}="${key}" value="${esc(choice)}" ${selected.includes(choice)?'checked':''}><span>${esc(choice)}</span></label>`).join('')}</div></fieldset>`;
@@ -2227,11 +2289,11 @@ function healthSurveyField(field,value='',scope='household'){
  let control;
  if(type==='select'){
   const selected=String(value??''),choices=healthSurveyOptions[optionKey]||[];
-  control=`<select ${attribute}="${key}" ${required?'data-health-required="true"':''}><option value="">-- เลือก --</option>${choices.map(choice=>`<option value="${esc(choice)}" ${selected===choice?'selected':''}>${esc(choice)}</option>`).join('')}</select>`;
+  control=`<select ${attribute}="${key}"><option value="">-- เลือก --</option>${choices.map(choice=>`<option value="${esc(choice)}" ${selected===choice?'selected':''}>${esc(choice)}</option>`).join('')}</select>`;
  }else if(type==='textarea'){
   control=`<textarea ${attribute}="${key}">${esc(value)}</textarea>`;
  }else{
-  control=`<input ${attribute}="${key}" type="${type}" value="${esc(value)}" ${type==='number'?'min="0" step="any"':''} ${required?'data-health-required="true"':''}>`;
+  control=`<input ${attribute}="${key}" type="${type}" value="${esc(value)}" ${type==='number'?'min="0" step="any"':''}>`;
  }
  return `<label class="${type==='textarea'?'full':''}">${esc(label)}${control}</label>`;
 }
@@ -2242,7 +2304,7 @@ function renderHealthSurveyFields(existing={}){
  const members=Array.isArray(existing.members)&&existing.members.length?existing.members:[{}];
  const section=(title,fields,scope)=>`<section class="health-survey-section"><h4>${esc(title)}</h4><div class="formgrid">${fields.map(field=>healthSurveyField(field,existing[field[0]],scope)).join('')}</div></section>`;
  const steps=[
-  {title:'1. ข้อมูลครัวเรือน',content:`<div class="notice health-survey-intro">กรุณาใช้รหัสสมาชิกแทนชื่อจริง ข้อมูลสุขภาพเป็นข้อมูลอ่อนไหวและควรบันทึกเท่าที่จำเป็น</div>${section('ข้อมูลครัวเรือน',healthSurveyHouseholdFields,'household')}`},
+  {title:'1. ข้อมูลครัวเรือน',content:`<div class="notice health-survey-intro">กรอกข้อมูลตามแบบสำรวจจริง รวมถึงชื่อสมาชิกได้เมื่อได้รับความยินยอม ข้อมูลสุขภาพเป็นข้อมูลอ่อนไหว โปรดบันทึกและจัดเก็บอย่างเหมาะสม</div>${section('ข้อมูลครัวเรือน',healthSurveyHouseholdFields,'household')}`},
   {title:'2. ข้อมูลสมาชิกในครัวเรือน',content:`<h4 class="health-survey-members-title">ข้อมูลสมาชิกในครัวเรือน</h4><div id="healthSurveyMembers" class="health-survey-members">${members.map(healthSurveyMemberCard).join('')}</div><button type="button" class="btn outline health-survey-add" onclick="addHealthSurveyMember()">＋ เพิ่มสมาชิก</button>`},
   {title:'3. สิ่งแวดล้อม สุขาภิบาล และอาหาร',content:section('สิ่งแวดล้อม สุขาภิบาล และอาหาร',healthSurveyEnvironmentFields,'environment')},
   {title:'4. สุขภาพแม่และเด็ก',content:section('สุขภาพแม่และเด็ก',healthSurveyMaternalFields,'maternal')},
@@ -2270,7 +2332,6 @@ function goHealthSurveyStep(step){
   button.classList.toggle('complete',index<next);
   button.setAttribute('aria-current',index===next?'step':'false');
  });
- $('#recordForm button[type="submit"][value="save"]').hidden=next!==5;
 }
 function nextHealthSurveyStep(){
  const form=$('#recordForm'),step=Number(form.dataset.healthStep||1),current=form.querySelector(`[data-health-step="${step}"]`);
@@ -2322,7 +2383,7 @@ function printBlankHealthSurvey(){
  openHealthSurveyPrintDocument({members:[]});
 }
 function openHealthSurveyPrintDocument(record){
- const memberSections=(record.members||[]).map((member,index)=>`<section class="member"><h2>สมาชิกคนที่ ${index+1}${member.memberCode?' · รหัส '+esc(member.memberCode):''}</h2>${healthSurveyMemberGroups.map(([title,fields])=>`<h3>${esc(title)}</h3><table><tbody>${fields.map(field=>healthSurveyPrintRow(field,member)).join('')}</tbody></table>`).join('')}</section>`).join('');
+ const memberSections=(record.members||[]).map((member,index)=>`<section class="member"><h2>สมาชิกคนที่ ${index+1}${member.memberName?' · '+esc(member.memberName):member.memberCode?' · รหัส '+esc(member.memberCode):''}</h2>${healthSurveyMemberGroups.map(([title,fields])=>`<h3>${esc(title)}</h3><table><tbody>${fields.map(field=>healthSurveyPrintRow(field,member)).join('')}</tbody></table>`).join('')}</section>`).join('');
  const sections=[
   healthSurveyPrintSection('1. ข้อมูลครัวเรือน',healthSurveyHouseholdFields,record),
   `<section><h2>2. ข้อมูลสมาชิกในครัวเรือน</h2>${memberSections||'<p>ไม่มีข้อมูลสมาชิก</p>'}</section>`,
@@ -2482,9 +2543,9 @@ function renderMap(a){
  let filter=$('#searchMap').value.toLowerCase(),visible=a.filter(r=>!filter||JSON.stringify(r).toLowerCase().includes(filter));
  visible.forEach(record=>{if(!hasValidCoordinates(record))return;let lat=Number(record.lat),lng=Number(record.lng);
   let diseases=diseaseSymbols([record.diseases,record.diseaseOther].filter(Boolean).join(', ')),symbols=diseases.map(d=>`<i class="${d.key}" title="${esc(d.label)}">${d.symbol}</i>`).join('')||'<i class="other">⌂</i>';
-  let icon=L.divIcon({className:'',html:`<div class="house-marker-shell" style="--house-color:#258f9e;--house-tint:#dff4ef"><span class="house-marker"><span>🏠</span></span><span class="disease-marker">${symbols}</span></div>`,iconSize:[58,56],iconAnchor:[29,53]});
+  let icon=L.divIcon({className:'',html:`<div class="house-marker-shell" style="--house-color:#258f9e;--house-tint:#dff4ef"><span class="house-marker"><span>🏠</span></span><span class="disease-marker">${symbols}</span></div>`,iconSize:[38,36],iconAnchor:[19,34]});
   let details=diseases.map(d=>`${d.symbol} ${d.label}`).join(' · ')||'ไม่ระบุโรค/ภาวะ';
-  let marker=L.marker([lat,lng],{icon,riseOnHover:true,riseOffset:800}).addTo(mapObj).bindTooltip(`🏠 ${esc(record.title||'ครัวเรือน')} · หมู่ ${esc(record.village||'-')}`,{direction:'top',offset:[0,-43]}).bindPopup(`<b>🏠 ${esc(record.title||'ครัวเรือน')}</b><br>หมู่ ${esc(record.village||'-')}<br>${esc(details)}<br><small>${esc(record.diseases||'')}</small>`);
+  let marker=L.marker([lat,lng],{icon,riseOnHover:true,riseOffset:800}).addTo(mapObj).bindTooltip(`🏠 ${esc(record.title||'ครัวเรือน')} · หมู่ ${esc(record.village||'-')}`,{direction:'top',offset:[0,-32]}).bindPopup(`<b>🏠 ${esc(record.title||'ครัวเรือน')}</b><br>หมู่ ${esc(record.village||'-')}<br>${esc(details)}<br><small>${esc(record.diseases||'')}</small>`);
   mapMarkers.push(marker);
  });
  $('#mapCount').textContent=visible.length+' ครัวเรือน';
@@ -2494,7 +2555,7 @@ function hasValidCoordinates(record){if(record.lat===''||record.lng===''||record
 function filterMapLocal(){if(cache.map)renderMap(cache.map)}
 let selectingMapPin=false,pinPreview=null;
 function stopMapPin(){selectingMapPin=false;$('#mapPanel').classList.remove('pin-pending');if(pinPreview&&mapObj)mapObj.removeLayer(pinPreview);pinPreview=null}
-function startMapPin(){requireLogin(()=>{selectingMapPin=true;$('#mapPanel').classList.add('pin-pending');if(mapObj){if(pinPreview)mapObj.removeLayer(pinPreview);pinPreview=L.marker(mapObj.getCenter(),{icon:L.divIcon({className:'',html:'<div class="house-marker-shell" style="--house-color:#f2a64a;--house-tint:#fff4e5"><span class="house-marker"><span>🏠</span></span></div>',iconSize:[58,56],iconAnchor:[29,53]}),interactive:false,opacity:.8,zIndexOffset:1000}).addTo(mapObj)}toast('เลื่อนเมาส์เพื่อดูตัวอย่างบ้าน แล้วคลิกตำแหน่งบ้านบนภาพถ่ายดาวเทียม')})}
+function startMapPin(){requireLogin(()=>{selectingMapPin=true;$('#mapPanel').classList.add('pin-pending');if(mapObj){if(pinPreview)mapObj.removeLayer(pinPreview);pinPreview=L.marker(mapObj.getCenter(),{icon:L.divIcon({className:'',html:'<div class="house-marker-shell" style="--house-color:#f2a64a;--house-tint:#fff4e5"><span class="house-marker"><span>🏠</span></span></div>',iconSize:[38,36],iconAnchor:[19,34]}),interactive:false,opacity:.8,zIndexOffset:1000}).addTo(mapObj)}toast('เลื่อนเมาส์เพื่อดูตัวอย่างบ้าน แล้วคลิกตำแหน่งบ้านบนภาพถ่ายดาวเทียม')})}
 function toggleMapExpand(){let layout=$('#mapLayout'),expanded=layout.classList.toggle('expanded'),button=$('#mapExpandBtn');button.textContent=expanded?'✕ ย่อแผนที่':'⛶ ขยายแผนที่';button.setAttribute('aria-expanded',String(expanded));if(mapObj)requestAnimationFrame(()=>mapObj.invalidateSize())}
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&$('#mapLayout').classList.contains('expanded'))toggleMapExpand()});
 function initMap(){if(!window.L||mapObj)return;mapObj=L.map('map',{minZoom:12,maxZoom:32}).setView(MAP_CENTER,MAP_ZOOM);L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'Tiles © Esri',maxNativeZoom:19,maxZoom:32}).addTo(mapObj);L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap',maxNativeZoom:19,maxZoom:32}).addTo(mapObj);mapObj.on('mousemove',event=>{if(selectingMapPin&&pinPreview)pinPreview.setLatLng(event.latlng)});mapObj.on('click',event=>{if(!selectingMapPin)return;stopMapPin();openRecord('map',{lat:event.latlng.lat.toFixed(6),lng:event.latlng.lng.toFixed(6)})})}
@@ -2514,7 +2575,7 @@ function openRecord(m,existing=null){
  $('#recordTitle').textContent=(isEditing?'แก้ไขข้อมูล · ':'เพิ่มข้อมูล · ')+moduleNames[m];
  $('#recordModal .modal').classList.toggle('survey-modal',m==='survey');
  $('#recordModal .modal').classList.toggle('health-survey-modal',m==='healthSurvey');
- $('#recordForm button[type="submit"][value="save"]').hidden=m==='healthSurvey';
+ $('#recordForm button[type="submit"][value="save"]').hidden=false;
  $('#saveAndAddHousehold').hidden=m!=='map'||isEditing;
  $('#recordFields').innerHTML=m==='survey'?renderSurveyFields(existing||{}):m==='healthSurvey'?renderHealthSurveyFields(existing||{}):fields.map(([key,label,type,required])=>{
   let element;
@@ -2540,9 +2601,8 @@ function isDuplicateHouseholdCode(code,excludeId=''){
 $('#recordForm').addEventListener('submit',async e=>{
  e.preventDefault();
  let m=e.target.dataset.module,record=m==='survey'?readSurveyRecord(e.target):m==='healthSurvey'?readHealthSurveyRecord(e.target):Object.fromEntries(new FormData(e.target)),editId=e.target.dataset.editId,addHousehold=e.submitter?.value==='addHousehold'&&m==='map'&&!editId,returnToGenogram=genogramHouseholdReturn;
- if(m==='healthSurvey'&&Number(e.target.dataset.healthStep)!==5){e.preventDefault();return}
  if(m==='survey'&&(!record.houseCode||!record.familyName||!record.members.length)){toast('กรุณากรอกรหัสบ้าน ชื่อครอบครัว และข้อมูลสมาชิกอย่างน้อย 1 คน');return}
- if(m==='healthSurvey'&&(!record.householdCode||!record.householdType)){e.target.querySelectorAll('[data-health-required="true"]').forEach(control=>{if(!String(control.value||'').trim()){goHealthSurveyStep(1);control.setCustomValidity('กรุณากรอกข้อมูลนี้');control.reportValidity();control.setCustomValidity('')}});return}
+ if(m==='healthSurvey'&&!Object.entries(record).some(([key,value])=>key!=='title'&&key!=='members'&&(Array.isArray(value)?value.length>0:String(value||'').trim()!==''))&&!record.members.length){toast('กรุณากรอกข้อมูลอย่างน้อย 1 ช่องก่อนบันทึก');return}
  if(m==='map'&&isDuplicateHouseholdCode(record.title,editId)){toast('รหัสครัวเรือนนี้มีอยู่แล้ว กรุณาตรวจสอบรายการเดิมก่อนบันทึก');return}
  if(m==='genogram')record.focusPerson=e.target.elements.namedItem('focusPerson').checked;
  if(m==='map'){
@@ -2565,7 +2625,7 @@ $('#recordForm').addEventListener('submit',async e=>{
   await loadModule(m);
   if(returnToGenogram)await loadModule('genogram');
   await refreshDashboard();
- }catch(err){toast(err.message)}
+ }catch(err){toast(m==='healthSurvey'?'บันทึกแบบสำรวจไม่สำเร็จ: '+err.message:err.message)}
 });
 async function removeRecord(id,module){if(!confirm('ยืนยันลบรายการนี้?'))return;try{await api('delete',{id,module});toast('ลบข้อมูลแล้ว');await loadModule(module);await refreshDashboard()}catch(e){toast(e.message)}}
 authUI();if(token){refreshDashboard();}else{$('#connStatus').textContent='● กรุณาเข้าสู่ระบบเพื่อเชื่อมต่อ';}

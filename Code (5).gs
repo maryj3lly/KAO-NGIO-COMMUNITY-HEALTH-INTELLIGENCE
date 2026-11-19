@@ -38,7 +38,7 @@ const MODULE_FIELDS = {
 };
 const SURVEY_MEMBER_FIELDS = ["nationalId","name","birthDate","sex","age","maritalStatus","occupation","homeStatus","education","familyPlanning","healthcare","healthConditions","moveType","moveDate"];
 const HEALTH_SURVEY_MEMBER_FIELDS = [
-  "memberCode","sex","age","relationship","maritalStatus","education","occupation","healthcare","healthConditions","healthConditionOther",
+  "memberName","memberCode","sex","age","relationship","maritalStatus","education","occupation","healthcare","healthConditions","healthConditionOther",
   "receivingTreatment","medicationUse","recentIllness","hospitalizedRecently","disability","stressLevel","weightKg","heightCm","waistCm",
   "diabetesScreening","bloodGlucose","bloodPressureScreening","bloodPressure","cancerScreening","smokingStatus","cigarettesPerDay",
   "alcoholUse","exerciseFrequency","dailyFruitVeg","annualCheckup","memberHealthNotes"
@@ -67,7 +67,7 @@ const FIELD_LABELS = {
   firstProvider:"สถานบริการสุขภาพที่ใช้ก่อน",serviceDistance:"ระยะทางถึงสถานบริการ",transport:"การเดินทางไปสถานบริการ",
   hasAccessProblem:"มีปัญหาในการเข้าถึงบริการ",accessProblems:"ปัญหาการเข้าถึงบริการ",desiredServices:"บริการสุขภาพที่ต้องการ",
   mainHealthConcern:"ปัญหาสุขภาพสำคัญ",healthServiceSuggestions:"ข้อเสนอแนะต่อบริการสุขภาพ",memberCode:"รหัสสมาชิก",
-  relationship:"ความสัมพันธ์กับหัวหน้าครัวเรือน",healthConditionOther:"โรค/ภาวะอื่น",receivingTreatment:"การรักษาโรคประจำตัว",
+  memberName:"ชื่อ-นามสกุล",relationship:"ความสัมพันธ์กับหัวหน้าครัวเรือน",healthConditionOther:"โรค/ภาวะอื่น",receivingTreatment:"การรักษาโรคประจำตัว",
   medicationUse:"การใช้ยา/การรักษาต่อเนื่อง",recentIllness:"การเจ็บป่วยในช่วงที่ผ่านมา",hospitalizedRecently:"การรักษาในโรงพยาบาล",
   disability:"ความพิการ/ข้อจำกัด",stressLevel:"ระดับความเครียด",weightKg:"น้ำหนัก (กิโลกรัม)",heightCm:"ส่วนสูง (เซนติเมตร)",
   waistCm:"รอบเอว (เซนติเมตร)",diabetesScreening:"ผลคัดกรองเบาหวาน",bloodGlucose:"ระดับน้ำตาลในเลือด",
@@ -338,7 +338,7 @@ function syncReadableSheet_(module) {
     }
   }
   sh.setFrozenRows(1);
-  sh.setFrozenColumns(4);
+  sh.setFrozenColumns(0);
   sh.setRowHeight(1,40);
   sh.getRange(1,1,1,columnCount).setFontWeight("bold").setBackground("#dff3e7").setWrap(true);
   sh.setColumnWidth(1,80);
