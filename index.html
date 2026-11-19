@@ -1568,6 +1568,387 @@ body {
     padding: 12px 13px;
   }
 }
+.stat {
+  min-height: 100px;
+  border: 3px solid transparent;
+  background: linear-gradient(145deg, #fff 12%, var(--stat-surface) 150%) padding-box, linear-gradient(135deg, var(--stat-frame-start), var(--stat-frame-end)) border-box;
+  box-shadow: 0 8px 18px var(--stat-shadow), inset 0 1px 0 rgba(255, 255, 255, .9);
+}
+.stat:nth-child(1) {
+  --stat-frame-start: #3677df;
+  --stat-frame-end: #15a7a0;
+  --stat-surface: #f2f8ff;
+  --stat-shadow: rgba(54, 119, 223, .14);
+}
+.stat:nth-child(2) {
+  --stat-frame-start: #07866d;
+  --stat-frame-end: #45bf8d;
+  --stat-surface: #effaf5;
+  --stat-shadow: rgba(7, 134, 109, .14);
+}
+.stat:nth-child(3) {
+  --stat-frame-start: #dc705a;
+  --stat-frame-end: #e8a343;
+  --stat-surface: #fff7f1;
+  --stat-shadow: rgba(200, 102, 75, .14);
+}
+.stat:nth-child(4) {
+  --stat-frame-start: #7058ca;
+  --stat-frame-end: #a56fc8;
+  --stat-surface: #f7f4ff;
+  --stat-shadow: rgba(112, 88, 202, .14);
+}
+.stat .staticon {
+  position: relative;
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  border: 1px solid rgba(255, 255, 255, .95);
+  border-radius: 15px;
+  background: linear-gradient(145deg, #fff 0%, var(--stat-tint) 66%, color-mix(in srgb, var(--stat-color) 18%, white));
+  box-shadow: inset 0 2px 3px rgba(255, 255, 255, .95), inset 0 -3px 5px color-mix(in srgb, var(--stat-color) 10%, white), 0 4px 0 color-mix(in srgb, var(--stat-color) 22%, white), 0 7px 12px rgba(32, 57, 91, .14);
+  transform: perspective(100px) rotateY(-10deg) rotateX(6deg) rotateZ(-2deg);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.stat:hover .staticon {
+  transform: perspective(100px) rotateY(-4deg) rotateX(2deg) rotateZ(0deg) translateY(-3px);
+  box-shadow: inset 0 2px 3px rgba(255, 255, 255, .95), inset 0 -3px 5px color-mix(in srgb, var(--stat-color) 10%, white), 0 5px 0 color-mix(in srgb, var(--stat-color) 22%, white), 0 10px 15px rgba(32, 57, 91, .16);
+}
+.stat .staticon:after {
+  position: absolute;
+  top: 5px;
+  right: 6px;
+  width: 12px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .8);
+  content: "";
+}
+.staticon svg {
+  width: 38px;
+  height: 38px;
+  overflow: visible;
+  filter: drop-shadow(0 2px 1px rgba(28, 50, 70, .12));
+}
+.stat > div:last-of-type {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+.stat small {
+  display: block;
+}
+.stats {
+  gap: 12px;
+}
+.stat {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  min-height: 174px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  overflow: hidden;
+  padding: 13px 15px 11px 18px;
+  border: 1px solid var(--stat-border);
+  border-radius: 15px;
+  background: linear-gradient(145deg, #fff 0%, var(--stat-surface) 100%);
+  box-shadow: 0 4px 12px var(--stat-shadow);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.stat:before {
+  position: absolute;
+  z-index: -1;
+  inset: 0 auto 0 0;
+  width: 4px;
+  border-radius: 4px 0 0 4px;
+  background: linear-gradient(180deg, var(--stat-frame-start), var(--stat-frame-end));
+  content: "";
+}
+.stat:after {
+  display: none;
+}
+.stat:nth-child(1) {
+  --stat-border: #f0dfe4;
+  --stat-surface: #fff3f5;
+  --stat-shadow: rgba(215, 91, 112, .09);
+  --stat-frame-start: #e85d77;
+  --stat-frame-end: #f59aa2;
+}
+.stat:nth-child(2) {
+  --stat-border: #d7edee;
+  --stat-surface: #effafb;
+  --stat-shadow: rgba(45, 154, 164, .09);
+  --stat-frame-start: #22a9b5;
+  --stat-frame-end: #68d1c5;
+}
+.stat:nth-child(3) {
+  --stat-border: #f2e7d5;
+  --stat-surface: #fff9ee;
+  --stat-shadow: rgba(202, 143, 57, .09);
+  --stat-frame-start: #e5a13c;
+  --stat-frame-end: #f0cb70;
+}
+.stat:nth-child(4) {
+  --stat-border: #e5def4;
+  --stat-surface: #f7f4ff;
+  --stat-shadow: rgba(119, 93, 186, .09);
+  --stat-frame-start: #8565c9;
+  --stat-frame-end: #b99be7;
+}
+.stat-top {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 9px;
+}
+.stat-category {
+  margin-top: 5px;
+  padding: 4px 8px;
+  border: 1px solid rgba(255, 255, 255, .9);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .66);
+  color: var(--stat-color);
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: .35px;
+  line-height: 1.3;
+  text-align: center;
+}
+.stat-content {
+  position: relative;
+  z-index: 1;
+}
+.stat-content h3 {
+  margin: 0;
+  color: #34445a;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+.stat-content strong {
+  display: block;
+  margin-top: 1px;
+  color: var(--stat-color);
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.stat-description {
+  margin: 3px 0 0;
+  color: #7d8b9d;
+  font-size: 10px;
+  line-height: 1.5;
+}
+.stat-open {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: auto;
+  padding: 7px 0 0;
+  border: 0;
+  border-top: 1px solid var(--stat-border);
+  background: transparent;
+  color: var(--stat-color);
+  font-size: 10px;
+  font-weight: 600;
+  text-align: left;
+}
+.stat-open span {
+  font-size: 15px;
+  line-height: 1;
+  transition: transform .18s ease;
+}
+.stat-open:hover span {
+  transform: translateX(3px);
+}
+.stat-open:focus-visible {
+  outline: 2px solid var(--stat-color);
+  outline-offset: 3px;
+}
+@media (max-width: 520px) {
+  .stat {
+    min-height: 168px;
+    padding: 11px 10px 10px 13px;
+  }
+  .stat-category {
+    padding: 3px 6px;
+    font-size: 7px;
+  }
+  .stat-content h3 {
+    font-size: 11px;
+  }
+  .stat-description {
+    font-size: 9px;
+  }
+}
+.stats {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+.stat {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  min-height: 76px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, .26);
+  border-radius: 9px;
+  background: linear-gradient(120deg, var(--stat-gradient-start), var(--stat-gradient-end));
+  box-shadow: 0 5px 12px var(--stat-shadow), inset 0 1px 0 rgba(255, 255, 255, .22);
+  color: #fff;
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.stat:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px var(--stat-shadow), inset 0 1px 0 rgba(255, 255, 255, .25);
+}
+.stat:focus-visible {
+  outline: 3px solid rgba(66, 140, 229, .55);
+  outline-offset: 3px;
+}
+.stat:before {
+  z-index: 1;
+  width: 3px;
+  border-radius: 3px 0 0 3px;
+  background: rgba(255, 255, 255, .48);
+}
+.stat:nth-child(1) {
+  --stat-gradient-start: #438fd9;
+  --stat-gradient-end: #316db8;
+  --stat-shadow: rgba(45, 106, 175, .2);
+}
+.stat:nth-child(2) {
+  --stat-gradient-start: #24aa90;
+  --stat-gradient-end: #167c69;
+  --stat-shadow: rgba(22, 124, 105, .2);
+}
+.stat:nth-child(3) {
+  --stat-gradient-start: #d96f98;
+  --stat-gradient-end: #b94f73;
+  --stat-shadow: rgba(185, 79, 115, .2);
+}
+.stat:nth-child(4) {
+  --stat-gradient-start: #956bc9;
+  --stat-gradient-end: #7048aa;
+  --stat-shadow: rgba(112, 72, 170, .2);
+}
+.stat .staticon {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, .38);
+  border-radius: 10px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, .3), rgba(255, 255, 255, .12));
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, .35), 0 3px 6px rgba(29, 43, 74, .14);
+  transform: perspective(90px) rotateY(-8deg) rotateX(5deg);
+}
+.staticon svg {
+  width: 25px;
+  height: 25px;
+  color: #fff;
+  filter: drop-shadow(0 1px 1px rgba(34, 48, 75, .2));
+}
+.stat-content {
+  min-width: 0;
+}
+.stat-content h3 {
+  overflow: hidden;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.stat-content small {
+  display: block;
+  overflow: hidden;
+  margin-top: 2px;
+  color: rgba(255, 255, 255, .84);
+  font-size: 9px;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.stat > strong {
+  margin: 0;
+  color: #fff;
+  font-size: 29px;
+  font-weight: 400;
+  line-height: 1;
+  text-shadow: 0 1px 3px rgba(29, 43, 74, .16);
+}
+@media (max-width: 520px) {
+  .stats {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .stat {
+    min-height: 70px;
+    grid-template-columns: 38px minmax(0, 1fr) auto;
+    padding: 9px 12px;
+  }
+  .stat-content h3 {
+    font-size: 12px;
+  }
+  .stat-content small {
+    font-size: 10px;
+  }
+  .stat > strong {
+    font-size: 27px;
+  }
+}
+.sheet-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 6px 10px;
+  border: 1px solid #cfe7dc;
+  border-radius: 9px;
+  background: #f0faf5;
+  color: #16785d;
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+.sheet-link:hover {
+  transform: translateY(-1px);
+  background: #e5f6ed;
+  box-shadow: 0 5px 12px rgba(20, 84, 69, .12);
+}
+.sheet-link:focus-visible {
+  outline: 3px solid rgba(66, 140, 229, .45);
+  outline-offset: 2px;
+}
+.sheet-link svg {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
+}
+@media (max-width: 480px) {
+  .sheet-link {
+    width: 34px;
+    padding: 6px;
+  }
+  .sheet-link span {
+    display: none;
+  }
+}
 </style>
 </head>
 <body>
@@ -1589,11 +1970,28 @@ body {
  <div class="sidebottom">COMMUNITY FIELDWORK SUITE<br>หมู่ 2 และหมู่ 10 · ตำบลเก่างิ้ว<br>อำเภอพล จังหวัดขอนแก่น<br><a class="btn ghost sm" href="https://docs.google.com/spreadsheets/d/17Oxw03fn-A8JcGbwaLTp7zDmpAns37eIpFJ-8xbLQlQ/edit?gid=0#gid=0" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:12px;text-decoration:none">เปิด Google Sheet ↗</a></div>
 </aside>
 <main class="main">
-<header class="topbar"><div style="display:flex;align-items:center;gap:12px"><button class="hamb" onclick="$('#sidebar').classList.toggle('open')">☰</button><div class="crumb" id="crumb">ภาพรวม Dashboard<small>Community assessment · 7 tools + 2 surveys</small></div></div><div class="topright"><span class="status" id="connStatus">● ยังไม่เชื่อมต่อฐานข้อมูล</span><div class="avatar" id="userAvatar">?</div><button class="btn outline sm" id="authBtn" onclick="openAuth()">เข้าสู่ระบบ</button></div></header>
+<header class="topbar"><div style="display:flex;align-items:center;gap:12px"><button class="hamb" onclick="$('#sidebar').classList.toggle('open')">☰</button><div class="crumb" id="crumb">ภาพรวม Dashboard<small>Community assessment · 7 tools + 2 surveys</small></div></div><div class="topright"><span class="status" id="connStatus">● ยังไม่เชื่อมต่อฐานข้อมูล</span><a class="sheet-link" href="https://docs.google.com/spreadsheets/d/17Oxw03fn-A8JcGbwaLTp7zDmpAns37eIpFJ-8xbLQlQ/edit?gid=0#gid=0" target="_blank" rel="noopener noreferrer" aria-label="เปิด Google Sheets ในแท็บใหม่" title="เปิด Google Sheets"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 3.75h8l4 4v12.5H6a2 2 0 0 1-2-2v-12.5a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14 3.75v4h4M7.5 11h7M7.5 14h7M7.5 17h7M11 11v6M14 11v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Google Sheets ↗</span></a><div class="avatar" id="userAvatar">?</div><button class="btn outline sm" id="authBtn" onclick="openAuth()">เข้าสู่ระบบ</button></div></header>
 <div class="content">
 <section class="page active" id="page-dashboard">
  <div class="hero"><div class="hero-copy"><div class="eyebrow">COMMUNITY HEALTH INTELLIGENCE</div><h1>ภาพรวมสุขภาพชุมชน</h1><p>ติดตามข้อมูลจากเครื่องมือศึกษาชุมชน 7 ชิ้น และแบบสำรวจ 2 ชุด · หมู่ 2 และหมู่ 10 ตำบลเก่างิ้ว อำเภอพล จังหวัดขอนแก่น</p></div><div class="hero-actions"><button class="btn light" onclick="go('map')">เปิดแผนที่ชุมชน →</button><button class="btn ghost" onclick="openAuth()">เข้าสู่ระบบจัดการข้อมูล</button></div></div>
- <div class="stats"><div class="stat"><div class="staticon">⌂</div><div><small>ครัวเรือนที่บันทึก</small><strong id="statHouse">—</strong></div></div><div class="stat"><div class="staticon">♧</div><div><small>สมาชิกในผังเครือญาติ</small><strong id="statPeople">—</strong></div></div><div class="stat"><div class="staticon">✣</div><div><small>ทรัพยากรชุมชน</small><strong id="statResource">—</strong></div></div><div class="stat"><div class="staticon">▤</div><div><small>บันทึกทั้งหมด</small><strong id="statTotal">—</strong></div></div></div>
+ <div class="stats">
+  <article class="stat" role="link" tabindex="0" onclick="go('map')" onkeydown="if(event.key==='Enter')this.click()">
+   <div class="staticon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15M12 8.5a2.5 2.5 0 1 0 5 0c0-1.6-2.5-4-2.5-4S12 6.9 12 8.5Z"/><circle cx="14.5" cy="8.5" r=".6" fill="currentColor" stroke="none"/></svg></div>
+   <div class="stat-content"><h3>ครัวเรือนที่บันทึก</h3><small>สำรวจตำแหน่งครัวเรือน</small></div><strong id="statHouse">—</strong>
+  </article>
+  <article class="stat" role="link" tabindex="0" onclick="go('genogram')" onkeydown="if(event.key==='Enter')this.click()">
+   <div class="staticon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3.5 19v-1.2A4.5 4.5 0 0 1 8 13.3h2a4.5 4.5 0 0 1 4.5 4.5V19zM14 14a4 4 0 0 1 6.5 3.1V19h-4"/></svg></div>
+   <div class="stat-content"><h3>สมาชิกในผังเครือญาติ</h3><small>สมาชิกและความสัมพันธ์ในครอบครัว</small></div><strong id="statPeople">—</strong>
+  </article>
+  <article class="stat" role="link" tabindex="0" onclick="go('resources')" onkeydown="if(event.key==='Enter')this.click()">
+   <div class="staticon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 3.5C12 3.5 6 6.8 6 13a5 5 0 0 0 5 5c6.2 0 9.5-6 9.5-14.5Z"/><path d="M4 21c3-5 7-8 12-11M17 16v5m-2.5-2.5h5"/></svg></div>
+   <div class="stat-content"><h3>ทรัพยากรชุมชน</h3><small>อาหาร สุขภาพ และสมุนไพร</small></div><strong id="statResource">—</strong>
+  </article>
+  <article class="stat" role="link" tabindex="0" onclick="document.querySelector('.toolgrid').scrollIntoView({behavior:'smooth',block:'start'})" onkeydown="if(event.key==='Enter')this.click()">
+   <div class="staticon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5h10a2 2 0 0 1 2 2v15H5v-15a2 2 0 0 1 2-2Z"/><path d="M9 3.5v-1h6v1M8.5 9h7M8.5 13h7M8.5 17h4"/></svg></div>
+   <div class="stat-content"><h3>บันทึกทั้งหมด</h3><small>7 เครื่องมือ · 2 แบบสำรวจ</small></div><strong id="statTotal">—</strong>
+  </article>
+ </div>
  <div class="dashboard-charts">
   <section class="panel chart-panel"><div class="panelhead"><div><h3>ข้อมูลที่บันทึกในแต่ละเครื่องมือ</h3><p class="chart-subtitle">จำนวนรายการจากฐานข้อมูลที่เชื่อมต่อ · แสดงข้อมูลจริงเท่านั้น</p></div><span class="tag">9 เครื่องมือ</span></div><div class="chart-scroller"><div id="moduleProgress" class="chart-empty">เข้าสู่ระบบเพื่อดูกราฟจากข้อมูลจริง</div></div></section>
   <section class="panel chart-panel"><div class="panelhead"><div><h3>สัดส่วนข้อมูลชุมชน</h3><p class="chart-subtitle">จำแนกตามเครื่องมือทั้ง 9 รายการ</p></div></div><div class="donut-layout"><div class="donut-wrap"><div id="moduleDonut" class="donut-chart"><div class="donut-hole"><strong id="donutTotal">—</strong><small>รายการ</small></div></div></div><div id="moduleLegend" class="donut-legend"><span class="muted">เข้าสู่ระบบเพื่อดูสัดส่วน</span></div></div></section>
